@@ -1,82 +1,62 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react'
+import React, {ChangeEvent} from 'react'
 import {TaskType} from "../../App";
 import {FilterValueType} from "../../App";
+import AddItemForm from "../AddItemForm/AddItemForm";
+import EditableSpan from '../EditableSpan/EditableSpan';
 
 type TodoListPropsType = {
+  id: string
   title: string
   tasks: Array<TaskType>
-  removeTask: (id: string) => void
-  changeFilter: (value: FilterValueType) => void
-  addTask: (title: string) => void
-  changeStatus: (id: string, isDone: boolean) => void
+  removeTask: (id: string, todoList: string) => void
+  changeFilter: (id: string, value: FilterValueType) => void
+  addTask: (title: string, todoListID: string) => void
+  changeTaskStatus: (id: string, isDone: boolean, todoListID: string) => void
+  changeTaskTitle: (id: string, newTitle: string, todoListID: string) => void
   filter: FilterValueType
+  removeTodoList: (id:string) => void
+  changeTodoListTitle: (id: string, newTitle: string) => void
 }
 
 export function TodoList(props: TodoListPropsType) {
-
-    /*локальный стейт инпута, синхронизируем value инпута с отрисовкой по клику новой таски в title*/
-    const [newTaskTitle, setNewTaskTitle] = useState<string>("");
-
-    let [error, setError] = useState<string | null>(null)
-
-
-    /*перерисовка инпута, засовываем в локал стейт впечатанное значение инпута и убираем ошибку, впечатывая*/
-    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setNewTaskTitle(e.currentTarget.value);
-        setError(null);
-    };
-
-    /*если нажат интер, то пихнуть в App*/
-    const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        e.charCode === 13 && addNewTask()
-    }
-
-
-    /*пихает из локального стейта в функцию addTask в App*/
-    const addNewTask = () => {
-        if(newTaskTitle.trim() !== "") {   /* метод трим удаляет пробелы, юзер не сможет добавить таску из пробелов*/
-            props.addTask(newTaskTitle);
-            setNewTaskTitle("")
-        } else {
-            setError("Title is not required") /* если после трима в строке ничего не осталось, то в стейт залетит текст ошибки*/
-        }
-    };
-
     /*отрисовываем лишки мапом*/
     const liElementsDrawer = props.tasks.map((task) => {
-        const onRemoveHandler = () => {props.removeTask(task.id)};
-        const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        const onRemoveHandler = () => {props.removeTask(task.id, props.id)};
+        const onChangeStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
             let newIsDoneValue = e.currentTarget.checked;
-            props.changeStatus(task.id, newIsDoneValue);
+            props.changeTaskStatus(task.id, newIsDoneValue, props.id);
+        }
+        const onChangeTitleHandler = (newValue: string) => {
+            props.changeTaskTitle(task.id, newValue, props.id);
         }
         return (
           <li key={task.id} className={props.filter !== "completed" && task.isDone ? "is-done" : "" }>
           {/*прозрачный класс добавится когда таска чекнута и не в фильтре комплитед*/}
-              <input type="checkbox" checked={task.isDone} onChange={onChangeHandler}/>
-              <span>{task.title}</span>
+              <input type="checkbox" checked={task.isDone} onChange={onChangeStatusHandler}/>
+              <EditableSpan title={task.title} onChange={onChangeTitleHandler} />
               <button onClick={ onRemoveHandler }>×</button>
           </li>
         )
     })
 
     /*Вынесли функции кнопок фильтрации*/
-    const onAllClickHandler = () => props.changeFilter("all") ;
+    const onAllClickHandler = () => props.changeFilter(props.id, "all") ;
+    const onActiveClickHandler = () =>  props.changeFilter(props.id, "active") ;
+    const onCompletedClickHandler = () => props.changeFilter(props.id, "completed") ;
+    const removeTodoList = () => props.removeTodoList(props.id) ;
+    const changeTodoListTitle = (newTitle: string) => props.changeTodoListTitle(props.id, newTitle) ;
 
-    const onActiveClickHandler = () =>  props.changeFilter("active") ;
-
-    const onCompletedClickHandler = () => props.changeFilter("completed") ;
+    //оберётка для стыковки интерфейсов addTask и addItem в AddItemForm (она примет только тайтл, а коллбек здесь достанет
+    //из пропсов айдишник тудулиста и передаст наверх оба значения
+    const addTask = (title: string) => props.addTask(title, props.id)
 
   return (
     <div>
-      <h3>{props.title}</h3>
-      <div>
-        <input value={newTaskTitle}
-               onChange={ onChangeHandler }
-               onKeyPress={ onKeyPressHandler }
-               className={error ? "error" : ""}/> {/*если ошибка то класс error, нет - пустой класснейм*/}
-        <button onClick={addNewTask}>+</button>
-          {error && <div className="error-message">{error}</div> }  {/* если есть ошибка, то отрисовываем*/}
-      </div>
+      <h3>
+          <EditableSpan title={props.title} onChange={changeTodoListTitle}/>
+          <button onClick={ removeTodoList }>X</button>
+      </h3>
+      <AddItemForm addItem={addTask}/>
       <ul>
         { liElementsDrawer }
       </ul>
