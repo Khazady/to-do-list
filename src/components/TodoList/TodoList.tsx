@@ -3,6 +3,9 @@ import {TaskType} from "../../App";
 import {FilterValueType} from "../../App";
 import AddItemForm from "../AddItemForm/AddItemForm";
 import EditableSpan from '../EditableSpan/EditableSpan';
+import {IconButton} from "@material-ui/core";
+import {Delete} from "@material-ui/icons";
+import {Button} from "@material-ui/core";
 
 type TodoListPropsType = {
   id: string
@@ -55,15 +58,18 @@ export function TodoList(props: TodoListPropsType) {
       <h3>
           <EditableSpan title={props.title} onChange={changeTodoListTitle}/>
           <button onClick={ removeTodoList }>X</button>
+          <IconButton onClick={ removeTodoList } >
+            <Delete/>
+          </IconButton>
       </h3>
       <AddItemForm addItem={addTask}/>
       <ul>
         { liElementsDrawer }
       </ul>
       <div>
-        <button onClick={ onAllClickHandler } className={props.filter === "all" ? "active-filter" : ""}>All</button>
-        <button onClick={ onActiveClickHandler} className={props.filter === "active" ? "active-filter" : ""}>Active</button>
-        <button onClick={ onCompletedClickHandler } className={props.filter === "completed" ? "active-filter" : ""}>Completed</button>
+        <Button onClick={ onAllClickHandler } className={props.filter === "all" ? "active-filter" : ""}>All</Button>
+        <Button onClick={ onActiveClickHandler} className={props.filter === "active" ? "active-filter" : ""}>Active</Button>
+        <Button onClick={ onCompletedClickHandler } className={props.filter === "completed" ? "active-filter" : ""}>Completed</Button>
       </div>
     </div>
   )

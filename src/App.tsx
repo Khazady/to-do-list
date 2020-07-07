@@ -96,7 +96,6 @@ function App() {
         //находим нудный тудулист
         let todoList = todoLists.filter(tl => tl.id === id);
         if(todoList) {
-            debugger
             todoList[0].title = newTitle //какой-то кал!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             setTodoList([...todoLists]);
         }
