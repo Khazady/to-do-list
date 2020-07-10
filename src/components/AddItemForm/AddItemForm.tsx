@@ -1,5 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
-import {Button} from "@material-ui/core";
+import {Button, IconButton, TextField} from "@material-ui/core";
+import {AddBox} from "@material-ui/icons";
 
 type AddItemFormPropsType = {
     addItem: (title: string) => void
@@ -13,7 +14,7 @@ function AddItemForm(props: AddItemFormPropsType) {
 
     /*пихает из локального стейта в функцию addTask в App* и удаляет пробелы */
     const addItem = () => {
-        if(title.trim() !== "") {
+        if (title.trim() !== "") {
             props.addItem(title);
             setTitle("")
         } else {
@@ -33,13 +34,18 @@ function AddItemForm(props: AddItemFormPropsType) {
 
     return (
       <div>
-          <input value={title}
-                 onChange={onChangeHandler}
-                 onKeyPress={onKeyPressHandler}
-                 className={error ? "error" : ""}/> {/*если ошибка то класс error, нет - пустой класснейм*/}
-          <Button variant={"contained"} color={"primary"} onClick={addItem}>+</Button>
-
-          {error && <div className="error-message">{error}</div>} {/* если есть ошибка, то отрисовываем*/}
+          <TextField value={title}
+                     onChange={onChangeHandler}
+                     onKeyPress={onKeyPressHandler}
+                     variant="outlined"
+            //Псевдоистина, тс блочит автомат. преобр. строки в булево, поэтому оператором делаем вручную
+                     error={!!error}
+                     label={"Title"}
+                     helperText={error}
+          />
+          <IconButton color="primary" onClick={addItem}>
+              <AddBox/>
+          </IconButton>
       </div>
     )
 }
