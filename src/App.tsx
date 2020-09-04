@@ -7,13 +7,13 @@ import {AppBar, Button, Container, Grid, IconButton, Menu, Toolbar, Typography, 
 
 export type FilterValueType = "all" | "active" | "completed";
 
-type TodoListType = {
+export type TodoListType = {
     id: string
     title: string
     filter: FilterValueType
 }
 
-type TasksStateType = {
+export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
 
