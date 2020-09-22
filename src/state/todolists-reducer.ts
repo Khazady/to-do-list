@@ -1,4 +1,4 @@
-import {FilterValueType, TodoListType} from "../App";
+import {FilterValueType, TodoListType} from "../AppWithRedux";
 import {v1} from "uuid";
 
 type ActionsType =
@@ -27,7 +27,8 @@ export type ChangeTodoListFilterActionType = {
     filter: FilterValueType
 }
 
-export const todolistsReducer = (state: Array<TodoListType>, action: ActionsType): Array<TodoListType> => {
+const initState: Array<TodoListType> = []
+export const todolistsReducer = (state: Array<TodoListType> = initState, action: ActionsType): Array<TodoListType> => {
 
     //создавая в каждом кейсе эту переменную вылетает ошибка, поэтому созд тут, а там переопределяем
     let todoList;
@@ -37,7 +38,7 @@ export const todolistsReducer = (state: Array<TodoListType>, action: ActionsType
             return state.filter(tl => tl.id !== action.id)
         case 'ADD-TODOLIST':
             let newTodoList: TodoListType = {id: action.todolistId, title: action.title, filter: "all"};
-            return [...state, newTodoList]
+            return [newTodoList, ...state]
         case 'CHANGE-TODOLIST-TITLE':
             todoList = state.filter(tl => tl.id === action.id);
             if (todoList) {
@@ -51,7 +52,7 @@ export const todolistsReducer = (state: Array<TodoListType>, action: ActionsType
             }
             return [...state];
         default:
-            throw new Error("I don't understand this type")
+            return state;
     }
 }
 

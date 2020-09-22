@@ -1,4 +1,4 @@
-import {FilterValueType, TodoListType, TasksStateType} from "../App";
+import {TasksStateType} from "../AppWithRedux";
 import {v1} from "uuid";
 import {AddTodoListActionType, RemoveTodoListActionType} from "./todolists-reducer";
 
@@ -27,7 +27,9 @@ export type ChangeTaskTitleActionType = {
     taskId: string
 }
 
-export const tasksReducer = (state: TasksStateType, action: ActionsType): TasksStateType => {
+const initState: TasksStateType = {}
+
+export const tasksReducer = (state: TasksStateType = initState, action: ActionsType): TasksStateType => {
     switch (action.type) {
         case "REMOVE-TASK": {
             const stateCopy = {...state}
@@ -47,23 +49,18 @@ export const tasksReducer = (state: TasksStateType, action: ActionsType): TasksS
         case "CHANGE-TASK-STATUS": {
             const stateCopy = {...state}
             const tasks = stateCopy[action.todolistId];
-            let task = tasks.find(task => task.id === action.taskId)
-            if (task) {
-                task.isDone = action.isDone;
-            }
+            //делаем копию таски и меняем в ней isDone, если id совпадает с id из action
+            stateCopy[action.todolistId] = tasks.map(t => t.id === action.taskId ? {...t, isDone: action.isDone} : t);
             return stateCopy
         }
         case "CHANGE-TASK-TITLE": {
             const stateCopy = {...state}
             const tasks = stateCopy[action.todolistId];
-            let task = tasks.find(task => task.id === action.taskId)
-            if (task) {
-                task.title = action.title;
-            }
+            stateCopy[action.todolistId] = tasks.map(t => t.id === action.taskId ? {...t, title: action.title} : t);
             return stateCopy
         }
-        //в этом редьюсере мы должны обрабатывать экшн редьюсера тудулиста,
-        //так как, мы должны создавать хранилище под таски, добавляя новый тудулист
+      //в этом редьюсере мы должны обрабатывать экшн редьюсера тудулиста,
+      //так как, мы должны создавать хранилище под таски, добавляя новый тудулист
         case "ADD-TODOLIST": {
             const stateCopy = {...state};
             stateCopy[action.todolistId] = [];
@@ -75,13 +72,13 @@ export const tasksReducer = (state: TasksStateType, action: ActionsType): TasksS
             return stateCopy
         }
         default:
-            throw new Error("I don't understand this type")
+            return state
     }
 }
 
 //Создают экшены для тестов, вызываются в тестах в параметре action
 export const removeTaskAC = (taskId: string, todolistId: string): RemoveTaskActionType => {
-    return { type: 'REMOVE-TASK', todolistId, taskId}
+    return {type: 'REMOVE-TASK', todolistId, taskId}
     //тоже самое что todolistId: todolistId, taskId: taskId
 }
 export const addTaskAC = (todolistId: string, title: string): AddTaskActionType => {
