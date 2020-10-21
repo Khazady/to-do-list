@@ -1,12 +1,16 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
-import {Button, IconButton, TextField} from "@material-ui/core";
+import {IconButton, TextField} from "@material-ui/core";
 import {AddBox} from "@material-ui/icons";
 
 type AddItemFormPropsType = {
     addItem: (title: string) => void
 }
 
-function AddItemForm(props: AddItemFormPropsType) {
+//React.memo предотвращает перерисовку когда приходят такие же пропсы
+//но т.к. нам приходит каждый раз одинаковый(для человека) коллбэк, а func это obj, а одинаковые объекты не равны
+//все равно происходит перерисовка, поэтому useCallback в addTask
+export const AddItemForm = React.memo(function(props: AddItemFormPropsType) {
+    console.log("AddItemForm rendered")
 
     /*локальный стейт инпута, синхронизируем value инпута с отрисовкой по клику новой таски в title*/
     let [title, setTitle] = useState<string>("");
@@ -26,9 +30,12 @@ function AddItemForm(props: AddItemFormPropsType) {
         setTitle(e.currentTarget.value);
         setError(null);
     };
-
     /*если нажат интер, то пихнуть в App*/
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        //чтобы setError не занулял ошибку при каждом нажатии клавиши
+        if (error !== null) {
+            setError(null)
+        }
         e.charCode === 13 && addItem()
     }
 
@@ -48,7 +55,7 @@ function AddItemForm(props: AddItemFormPropsType) {
           </IconButton>
       </div>
     )
-}
+} );
 
 
 export default AddItemForm;

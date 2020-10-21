@@ -1,4 +1,3 @@
-import {TasksStateType} from "../AppWithRedux";
 import {v1} from "uuid";
 import {AddTodoListActionType, RemoveTodoListActionType} from "./todolists-reducer";
 
@@ -27,6 +26,15 @@ export type ChangeTaskTitleActionType = {
     taskId: string
 }
 
+export type TasksStateType = {
+    [key: string]: Array<TaskType>
+}
+export type TaskType = {
+    id: string,
+    title: string,
+    isDone: boolean
+}
+
 const initState: TasksStateType = {}
 
 export const tasksReducer = (state: TasksStateType = initState, action: ActionsType): TasksStateType => {
@@ -49,13 +57,20 @@ export const tasksReducer = (state: TasksStateType = initState, action: ActionsT
         case "CHANGE-TASK-STATUS": {
             const stateCopy = {...state}
             const tasks = stateCopy[action.todolistId];
-            //делаем копию таски и меняем в ней isDone, если id совпадает с id из action
-            stateCopy[action.todolistId] = tasks.map(t => t.id === action.taskId ? {...t, isDone: action.isDone} : t);
+            //если id совпадает с id из action
+            stateCopy[action.todolistId] = tasks.map(t => t.id === action.taskId
+                //делаем копию таски и меняем в ней isDone
+                ? {...t, isDone: action.isDone}
+                //иначе возвращаем просто таску
+                : t);
             return stateCopy
         }
         case "CHANGE-TASK-TITLE": {
+            //shallow copy
             const stateCopy = {...state}
+            //старые таски
             const tasks = stateCopy[action.todolistId];
+            //делаем копию таски и меняем в ней title, если id совпадает с id из action
             stateCopy[action.todolistId] = tasks.map(t => t.id === action.taskId ? {...t, title: action.title} : t);
             return stateCopy
         }
@@ -76,7 +91,7 @@ export const tasksReducer = (state: TasksStateType = initState, action: ActionsT
     }
 }
 
-//Создают экшены для тестов, вызываются в тестах в параметре action
+//Создают экшены для (тестов и), вызываются в тестах в параметре action
 export const removeTaskAC = (taskId: string, todolistId: string): RemoveTaskActionType => {
     return {type: 'REMOVE-TASK', todolistId, taskId}
     //тоже самое что todolistId: todolistId, taskId: taskId
