@@ -40,13 +40,13 @@ export const TodoList = React.memo((props: TodoListPropsType) => {
     }
 
     //запоминает функцию и т.к. пустой [], то никогда не создавай новую функцию
-    //добавляем dispatch в [], просто чтобы реакт не ругался в консоли (disp не меняется и можно было бы его не добавлять)
+    //disp и AC не меняется и можно его не добавлять
     //обязательно вставляем всё, от чего зависит функция извне (props.id)
-    const addTask = useCallback((title: string) => dispatch(addTaskAC(props.id, title)), [dispatch, props.id]);
+    const addTask = useCallback((title: string) => dispatch(addTaskAC(props.id, title)), [props.id]);
     const removeTodoList = useCallback(() => dispatch(removeTodolistAC(props.id)), [dispatch, props.id]);
-    const changeTodoListTitle = useCallback((newTitle: string) => dispatch(changeTodoListTitleAC(props.id, newTitle)), [dispatch, props.id]);
-    //меняет кнопки фильтрации
-    const changeFilter = useCallback((id: string, value: FilterValueType) => dispatch(changeTodoListFilterAC(props.id, value)), [dispatch, props.id]);
+    const changeTodoListTitle = useCallback((newTitle: string) => dispatch(changeTodoListTitleAC(props.id, newTitle)), [props.id]);
+    //предполагаем, что в Button от MatUI внутри тоже есть React.memo, поэтому оборачиваем передаваемых в них коллбэк в useCallback
+    const changeFilter = useCallback((id: string, value: FilterValueType) => dispatch(changeTodoListFilterAC(props.id, value)), [props.id]);
 
     return (
         <div>
