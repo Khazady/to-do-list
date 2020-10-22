@@ -7,13 +7,13 @@ import {
     addTodolistAC,
 } from "./state/todolists-reducer";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootState} from "./state/store";
+import {AppRootStateType} from "./state/store";
 
-export type FilterValueType = "all" | "active" | "completed";
-export type TodoListType = {
+export type FilterValuesType = "all" | "active" | "completed";
+export type TodolistType = {
     id: string
     title: string
-    filter: FilterValueType
+    filter: FilterValuesType
 }
 
 
@@ -24,7 +24,7 @@ function AppWithRedux() {
     const dispatch = useDispatch();
 
     //первый дженерик тип глобал стейта, второй того, что мы селектим
-    const todoLists = useSelector<AppRootState, Array<TodoListType>>(state => state.todolist)
+    const todolists = useSelector<AppRootStateType, Array<TodolistType>>(state => state.todolists)
 
     //запоминает функцию и т.к. пустой [], то никогда не создавай новую функцию при перерисовке
     //добавляем dispatch в [], просто чтобы реакт не ругался в консоли (disp не меняется и можно было бы его не добавлять)
@@ -50,7 +50,7 @@ function AppWithRedux() {
               </Grid>
               <Grid container spacing={3}>
                   {
-                      todoLists.map(todoList => {
+                      todolists.map(todoList => {
 
                           return (
                             <Grid item key={todoList.id}>

@@ -1,4 +1,4 @@
-import {FilterValueType, TodoListType} from "../AppWithRedux";
+import {FilterValuesType, TodolistType} from "../AppWithRedux";
 import {v1} from "uuid";
 
 type ActionsType =
@@ -24,11 +24,11 @@ export type ChangeTodoListTitleActionType = {
 export type ChangeTodoListFilterActionType = {
     type: "CHANGE-TODOLIST-FILTER",
     id: string
-    filter: FilterValueType
+    filter: FilterValuesType
 }
 
-const initState: Array<TodoListType> = []
-export const todolistsReducer = (state: Array<TodoListType> = initState, action: ActionsType): Array<TodoListType> => {
+const initState: Array<TodolistType> = []
+export const todolistsReducer = (state: Array<TodolistType> = initState, action: ActionsType): Array<TodolistType> => {
 
     //создавая в каждом кейсе эту переменную вылетает ошибка, поэтому созд тут, а там переопределяем
     let todoList;
@@ -37,7 +37,7 @@ export const todolistsReducer = (state: Array<TodoListType> = initState, action:
         case 'REMOVE-TODOLIST':
             return state.filter(tl => tl.id !== action.id)
         case 'ADD-TODOLIST':
-            let newTodoList: TodoListType = {id: action.todolistId, title: action.title, filter: "all"};
+            let newTodoList: TodolistType = {id: action.todolistId, title: action.title, filter: "all"};
             return [newTodoList, ...state]
         case 'CHANGE-TODOLIST-TITLE':
             todoList = state.filter(tl => tl.id === action.id);
@@ -68,6 +68,6 @@ export const addTodolistAC = (todolistTitle: string): AddTodoListActionType => {
 export const changeTodoListTitleAC = (todolistId: string, todolistTitle: string): ChangeTodoListTitleActionType => {
     return { type: 'CHANGE-TODOLIST-TITLE', id: todolistId, title: todolistTitle}
 }
-export const changeTodoListFilterAC = (todolistId: string, todolistFilter: FilterValueType): ChangeTodoListFilterActionType => {
+export const changeTodoListFilterAC = (todolistId: string, todolistFilter: FilterValuesType): ChangeTodoListFilterActionType => {
     return { type: 'CHANGE-TODOLIST-FILTER', id: todolistId, filter: todolistFilter}
 }

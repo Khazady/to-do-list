@@ -6,11 +6,11 @@ import {
     todolistsReducer
 } from './todolists-reducer';
 import {v1} from 'uuid';
-import {FilterValueType, TodoListType} from '../AppWithRedux';
+import {FilterValuesType, TodolistType} from '../AppWithRedux';
 
 let todolistId1: string;
 let todolistId2: string;
-let startState: Array<TodoListType> = [];
+let startState: Array<TodolistType> = [];
 
 //перед каждым тестом задает стартовые значения
 beforeEach(() => {
@@ -51,7 +51,7 @@ test('correct todolist should change its name', () => {
 
 test('correct filter of todolist should be changed', () => {
 
-    let newFilter: FilterValueType = "completed";
+    let newFilter: FilterValuesType = "completed";
 
     const endState = todolistsReducer(startState, changeTodoListFilterAC(todolistId2, newFilter));
 

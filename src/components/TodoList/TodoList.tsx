@@ -1,11 +1,11 @@
 import React, {useCallback} from 'react'
-import {FilterValueType} from "../../AppWithRedux";
+import {FilterValuesType} from "../../AppWithRedux";
 import AddItemForm from "../AddItemForm/AddItemForm";
 import EditableSpan from '../EditableSpan/EditableSpan';
 import {Button, ButtonGroup, IconButton} from "@material-ui/core";
 import {Delete, Home} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootState} from "../../state/store";
+import {AppRootStateType} from "../../state/store";
 import {addTaskAC, TaskType} from "../../state/tasks-reducer";
 import {changeTodoListFilterAC, changeTodoListTitleAC, removeTodolistAC} from "../../state/todolists-reducer";
 import {Task} from "./Task/Task";
@@ -13,7 +13,7 @@ import {Task} from "./Task/Task";
 type TodoListPropsType = {
     id: string
     title: string
-    filter: FilterValueType
+    filter: FilterValuesType
 }
 
 export const TodoList = React.memo((props: TodoListPropsType) => {
@@ -22,7 +22,7 @@ export const TodoList = React.memo((props: TodoListPropsType) => {
 
     //первый дженерик тип глобал стейта, второй того, что мы селектим
     //вместо mapStateToProps, храним здесь стейт, нужный для этой компоненты
-    const allTodoListTasks = useSelector<AppRootState, Array<TaskType>>(state => state.tasks[props.id])
+    const allTodoListTasks = useSelector<AppRootStateType, Array<TaskType>>(state => state.tasks[props.id])
 
     //в неё кладем отсортированные таски (создаем тут, чтобы не создавать в каждом case)
     //let потому что делаем ниже присваивания
@@ -42,11 +42,11 @@ export const TodoList = React.memo((props: TodoListPropsType) => {
     //запоминает функцию и т.к. пустой [], то никогда не создавай новую функцию
     //disp и AC не меняется и можно его не добавлять
     //обязательно вставляем всё, от чего зависит функция извне (props.id)
-    const addTask = useCallback((title: string) => dispatch(addTaskAC(props.id, title)), [props.id]);
+    const addTask = useCallback((title: string) => dispatch(addTaskAC(props.id, title)), [dispatch, props.id]);
     const removeTodoList = useCallback(() => dispatch(removeTodolistAC(props.id)), [dispatch, props.id]);
-    const changeTodoListTitle = useCallback((newTitle: string) => dispatch(changeTodoListTitleAC(props.id, newTitle)), [props.id]);
+    const changeTodoListTitle = useCallback((newTitle: string) => dispatch(changeTodoListTitleAC(props.id, newTitle)), [dispatch, props.id]);
     //предполагаем, что в Button от MatUI внутри тоже есть React.memo, поэтому оборачиваем передаваемых в них коллбэк в useCallback
-    const changeFilter = useCallback((id: string, value: FilterValueType) => dispatch(changeTodoListFilterAC(props.id, value)), [props.id]);
+    const changeFilter = useCallback((id: string, value: FilterValuesType) => dispatch(changeTodoListFilterAC(props.id, value)), [dispatch, props.id]);
 
     return (
         <div>

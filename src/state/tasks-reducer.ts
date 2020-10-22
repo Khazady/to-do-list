@@ -29,13 +29,16 @@ export type ChangeTaskTitleActionType = {
 export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
+
 export type TaskType = {
     id: string,
     title: string,
     isDone: boolean
 }
 
-const initState: TasksStateType = {}
+const initState: TasksStateType = {
+    count: []
+}
 
 export const tasksReducer = (state: TasksStateType = initState, action: ActionsType): TasksStateType => {
     switch (action.type) {
