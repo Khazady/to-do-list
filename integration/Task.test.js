@@ -1,7 +1,7 @@
 //describe - "папка с тестами", а it - 1 тест
-describe('addItemForm', () => {
+describe('Task', () => {
     it('base example, visually looks correct', async () => {
-        await page.goto('http://localhost:9009/iframe.html?id=additemform-stories--base-example&viewMode=story');
+        await page.goto('http://localhost:9009/iframe.html?id=task-stories--base-example&viewMode=story');
         //делаем скриншот по урлу с вставленным iframe.html
         //1-ый скрин эталонный
         const image = await page.screenshot();

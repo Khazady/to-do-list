@@ -10,7 +10,7 @@ export default {
 };
 
 //AddItemForm в пропсах ждёт колбек, поэтому передаем туда action (фейковый коллбек)
-export const AppWithReduxBaseExample = () => {
+export const BaseExample = () => {
     return (
         <AppWithRedux/>
     )

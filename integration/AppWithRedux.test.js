@@ -1,7 +1,9 @@
 //describe - "папка с тестами", а it - 1 тест
-describe('addItemForm', () => {
+describe('AppWithRedux', () => {
     it('base example, visually looks correct', async () => {
-        await page.goto('http://localhost:9009/iframe.html?id=additemform-stories--base-example&viewMode=story');
+        //стандартного таймаута jest'а в 5000 не хватает чтобы сделать скрин??7
+        jest.setTimeout(30000);
+        await page.goto('http://localhost:9009/iframe.html?id=appwithredux-stories--base-example&viewMode=story');
         //делаем скриншот по урлу с вставленным iframe.html
         //1-ый скрин эталонный
         const image = await page.screenshot();
@@ -10,3 +12,4 @@ describe('addItemForm', () => {
         expect(image).toMatchImageSnapshot();
     });
 });
+

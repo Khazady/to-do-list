@@ -7,7 +7,7 @@ export default {
     component: AddItemForm,
 };
 
-export const AddItemFormBaseExample = () => {
+export const BaseExample = () => {
     return (
         <AddItemForm addItem={(title: string) => alert(title)}/>
     )

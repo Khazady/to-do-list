@@ -50,15 +50,15 @@ function AppWithRedux() {
               </Grid>
               <Grid container spacing={3}>
                   {
-                      todolists.map(todoList => {
+                      todolists.map(todolist => {
 
                           return (
-                            <Grid item key={todoList.id}>
+                            <Grid item key={todolist.id}>
                                 <Paper style={{padding: "10px"}}>
                                     <TodoList
-                                      id={todoList.id}
-                                      title={todoList.title}
-                                      filter={todoList.filter}
+                                      id={todolist.id}
+                                      title={todolist.title}
+                                      filter={todolist.filter}
                                     />
                                 </Paper>
                             </Grid>

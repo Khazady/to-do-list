@@ -11,7 +11,7 @@ export default {
 const changeCallback = action("Value changed");
 
 //AddItemForm в пропсах ждёт колбек, поэтому передаем туда action (фейковый коллбек)
-export const EditableSpanBaseExample = () => {
+export const BaseExample = () => {
     return (
         <EditableSpan title={"Start value"} onChange={changeCallback}/>
     )
