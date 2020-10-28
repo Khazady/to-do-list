@@ -33,7 +33,6 @@ type GetTaskResponse<Item = {}> = {
 export type TaskType = {
     description: string
     title: string
-    completed: boolean
     status: number
     priority: number
     startDate: string
@@ -44,14 +43,13 @@ export type TaskType = {
     addedDate: string
 }
 //проверить приходит ли completed(isDone)
-type UpdateTaskType = {
+type UpdateTaskModelType = {
     title: string
     description: string
-    completed: boolean
     status: number
     priority: number
-    startDate: string
-    deadline: string
+    startDate: string | null
+    deadline: string | null
 }
 
 
@@ -86,17 +84,7 @@ export const tasksAPI = {
     deleteTask(todolistId: string, taskId: string) {
         return instance.delete<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`).then(res => res.data)
     },
-    updateTask(todolistId: string, taskId: string, title: string) {
-        const request = {
-            title: "New value of title",
-            description: "string",
-            completed: true,
-            status: 1,
-            priority: 1,
-            //здесь нужно получать актуальную дату в этом формате
-            startDate: "2020-10-24T13:08:36.383",
-            deadline: "2020-10-24T13:08:36.383"
-        }
-        return instance.put<ResponseType<{item: TaskType}>>(`todo-lists/${todolistId}/tasks/${taskId}`, request).then(res => res.data)
+    updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
+        return instance.put<ResponseType<{item: TaskType}>>(`todo-lists/${todolistId}/tasks/${taskId}`, model).then(res => res.data)
     }
 }
