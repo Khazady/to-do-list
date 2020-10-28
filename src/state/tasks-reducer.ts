@@ -1,8 +1,9 @@
 import {v1} from "uuid";
 import {AddTodoListActionType, RemoveTodoListActionType} from "./todolists-reducer";
+import {TaskPriorities, TasksStateType, TaskStatuses, TaskType} from "../api/api";
 
 type ActionsType = RemoveTaskActionType | AddTaskActionType | ChangeTaskStatusActionType | ChangeTaskTitleActionType
-  | AddTodoListActionType | RemoveTodoListActionType;
+    | AddTodoListActionType | RemoveTodoListActionType;
 export type RemoveTaskActionType = {
     type: "REMOVE-TASK"
     todolistId: string
@@ -15,7 +16,7 @@ export type AddTaskActionType = {
 }
 export type ChangeTaskStatusActionType = {
     type: "CHANGE-TASK-STATUS"
-    isDone: boolean
+    status: TaskStatuses
     todolistId: string
     taskId: string
 }
@@ -24,16 +25,6 @@ export type ChangeTaskTitleActionType = {
     title: string
     todolistId: string
     taskId: string
-}
-
-export type TasksStateType = {
-    [key: string]: Array<TaskType>
-}
-
-export type TaskType = {
-    id: string,
-    title: string,
-    isDone: boolean
 }
 
 const initState: TasksStateType = {
@@ -52,7 +43,14 @@ export const tasksReducer = (state: TasksStateType = initState, action: ActionsT
         case "ADD-TASK": {
             const stateCopy = {...state};
             const tasks = stateCopy[action.todolistId];
-            const newTask = {id: v1(), title: action.title, isDone: false};
+            const newTask: TaskType = {
+                id: v1(),
+                todoListId: action.todolistId,
+                title: action.title,
+                status: TaskStatuses.New,
+                priority: TaskPriorities.Middle,
+                description: "", startDate: "", deadline: "", order: 1, addedDate: ""
+            };
             const newTasks = [newTask, ...tasks];
             stateCopy[action.todolistId] = newTasks;
             return stateCopy
@@ -63,7 +61,7 @@ export const tasksReducer = (state: TasksStateType = initState, action: ActionsT
             //если id совпадает с id из action
             stateCopy[action.todolistId] = tasks.map(t => t.id === action.taskId
                 //делаем копию таски и меняем в ней isDone
-                ? {...t, isDone: action.isDone}
+                ? {...t, status: action.status}
                 //иначе возвращаем просто таску
                 : t);
             return stateCopy
@@ -77,8 +75,8 @@ export const tasksReducer = (state: TasksStateType = initState, action: ActionsT
             stateCopy[action.todolistId] = tasks.map(t => t.id === action.taskId ? {...t, title: action.title} : t);
             return stateCopy
         }
-      //в этом редьюсере мы должны обрабатывать экшн редьюсера тудулиста,
-      //так как, мы должны создавать хранилище под таски, добавляя новый тудулист
+        //в этом редьюсере мы должны обрабатывать экшн редьюсера тудулиста,
+        //так как, мы должны создавать хранилище под таски, добавляя новый тудулист
         case "ADD-TODOLIST": {
             const stateCopy = {...state};
             stateCopy[action.todolistId] = [];
@@ -102,8 +100,8 @@ export const removeTaskAC = (taskId: string, todolistId: string): RemoveTaskActi
 export const addTaskAC = (todolistId: string, title: string): AddTaskActionType => {
     return {type: 'ADD-TASK', title, todolistId}
 }
-export const changeTaskStatusAC = (taskId: string, isDone: boolean, todolistId: string): ChangeTaskStatusActionType => {
-    return {type: 'CHANGE-TASK-STATUS', taskId, todolistId, isDone}
+export const changeTaskStatusAC = (taskId: string, status: TaskStatuses, todolistId: string): ChangeTaskStatusActionType => {
+    return {type: 'CHANGE-TASK-STATUS', taskId, todolistId, status}
 }
 export const changeTaskTitleAC = (taskId: string, title: string, todolistId: string): ChangeTaskTitleActionType => {
     return {type: 'CHANGE-TASK-TITLE', taskId, todolistId, title}

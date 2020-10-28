@@ -1,5 +1,5 @@
-import {FilterValuesType, TodolistType} from "../AppWithRedux";
 import {v1} from "uuid";
+import {TodolistType} from "../api/api";
 
 type ActionsType =
   RemoveTodoListActionType
@@ -27,8 +27,14 @@ export type ChangeTodoListFilterActionType = {
     filter: FilterValuesType
 }
 
-const initState: Array<TodolistType> = []
-export const todolistsReducer = (state: Array<TodolistType> = initState, action: ActionsType): Array<TodolistType> => {
+export type FilterValuesType = "all" | "active" | "completed";
+//дополняем тип, приходящий с сервера тем, что нужно UI
+export type TodolistBusinessType = TodolistType & {
+    filter: FilterValuesType
+}
+
+const initState: Array<TodolistBusinessType> = []
+export const todolistsReducer = (state: Array<TodolistBusinessType> = initState, action: ActionsType): Array<TodolistBusinessType> => {
 
     //создавая в каждом кейсе эту переменную вылетает ошибка, поэтому созд тут, а там переопределяем
     let todoList;
@@ -37,7 +43,7 @@ export const todolistsReducer = (state: Array<TodolistType> = initState, action:
         case 'REMOVE-TODOLIST':
             return state.filter(tl => tl.id !== action.id)
         case 'ADD-TODOLIST':
-            let newTodoList: TodolistType = {id: action.todolistId, title: action.title, filter: "all"};
+            let newTodoList: TodolistBusinessType = {id: action.todolistId, title: action.title, filter: "all", addedDate: '', order: 0};
             return [newTodoList, ...state]
         case 'CHANGE-TODOLIST-TITLE':
             todoList = state.filter(tl => tl.id === action.id);

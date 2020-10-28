@@ -2,6 +2,7 @@ import React from 'react';
 import {action} from '@storybook/addon-actions';
 import {Task} from '../components/TodoList/Task/Task';
 import {ReduxStoreProviderDecorator} from "./decorators/ReduxStoreProviderDecorator";
+import {TaskPriorities, TaskStatuses} from "../api/api";
 
 export default {
     title: 'Task Stories',
@@ -17,10 +18,32 @@ const callback = action("Button inside form was clicked");
 export const BaseExample = () => {
     return (
         <>
-            <Task task={{id: "1", isDone: true, title: "CSS"}}
+            <Task task={{
+                id: "1",
+                status: TaskStatuses.Completed,
+                title: "CSS",
+                todoListId: "todolistId1",
+                priority: TaskPriorities.High,
+                description: "",
+                startDate: "",
+                deadline: "",
+                order: 1,
+                addedDate: ""
+            }}
                   filter={"active"}
                   todolistId={"todolistId1"}/>
-            <Task task={{id: "2", isDone: false, title: "JS"}}
+            <Task task={{
+                id: "2",
+                status: TaskStatuses.New,
+                title: "JS",
+                todoListId: "todolistId1",
+                priority: TaskPriorities.High,
+                description: "",
+                startDate: "",
+                deadline: "",
+                order: 1,
+                addedDate: ""
+            }}
                   filter={"active"}
                   todolistId={"todolistId2"}/>
         </>

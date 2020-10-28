@@ -4,18 +4,10 @@ import {TodoList} from "./components/TodoList/TodoList";
 import AddItemForm from "./components/AddItemForm/AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Menu, Toolbar, Typography, Paper} from "@material-ui/core";
 import {
-    addTodolistAC,
+    addTodolistAC, TodolistBusinessType,
 } from "./state/todolists-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./state/store";
-
-export type FilterValuesType = "all" | "active" | "completed";
-export type TodolistType = {
-    id: string
-    title: string
-    filter: FilterValuesType
-}
-
 
 function AppWithRedux() {
     console.log("AppWithRedux is called")
@@ -24,7 +16,7 @@ function AppWithRedux() {
     const dispatch = useDispatch();
 
     //первый дженерик тип глобал стейта, второй того, что мы селектим
-    const todolists = useSelector<AppRootStateType, Array<TodolistType>>(state => state.todolists)
+    const todolists = useSelector<AppRootStateType, Array<TodolistBusinessType>>(state => state.todolists)
 
     //запоминает функцию и т.к. пустой [], то никогда не создавай новую функцию при перерисовке
     //добавляем dispatch в [], просто чтобы реакт не ругался в консоли (disp не меняется и можно было бы его не добавлять)
