@@ -1,11 +1,12 @@
-import {v1} from "uuid";
-import {TodolistType} from "../api/api";
+import {Dispatch} from "redux";
+import {todolistsAPI, TodolistServerType} from "../api/api";
 
 type ActionsType =
-  RemoveTodoListActionType
-  | AddTodoListActionType
-  | ChangeTodoListTitleActionType
-  | ChangeTodoListFilterActionType;
+    RemoveTodoListActionType
+    | AddTodoListActionType
+    | ChangeTodoListTitleActionType
+    | ChangeTodoListFilterActionType
+    | SetTodolistActionType
 
 export type RemoveTodoListActionType = {
     type: "REMOVE-TODOLIST",
@@ -13,8 +14,7 @@ export type RemoveTodoListActionType = {
 }
 export type AddTodoListActionType = {
     type: "ADD-TODOLIST"
-    title: string
-    todolistId: string
+    todolist: TodolistServerType
 }
 export type ChangeTodoListTitleActionType = {
     type: "CHANGE-TODOLIST-TITLE",
@@ -26,10 +26,14 @@ export type ChangeTodoListFilterActionType = {
     id: string
     filter: FilterValuesType
 }
+export type SetTodolistActionType = {
+    type: "SET-TODOLISTS-TYPE",
+    todolists: Array<TodolistServerType>
+}
 
 export type FilterValuesType = "all" | "active" | "completed";
 //дополняем тип, приходящий с сервера тем, что нужно UI
-export type TodolistBusinessType = TodolistType & {
+export type TodolistBusinessType = TodolistServerType & {
     filter: FilterValuesType
 }
 
@@ -43,8 +47,12 @@ export const todolistsReducer = (state: Array<TodolistBusinessType> = initState,
         case 'REMOVE-TODOLIST':
             return state.filter(tl => tl.id !== action.id)
         case 'ADD-TODOLIST':
-            let newTodoList: TodolistBusinessType = {id: action.todolistId, title: action.title, filter: "all", addedDate: '', order: 0};
-            return [newTodoList, ...state]
+            //добавляем в серверный тудулист фильтр
+            const newTodolist: TodolistBusinessType = {
+                ...action.todolist,
+                filter: "all"
+            }
+            return [newTodolist, ...state]
         case 'CHANGE-TODOLIST-TITLE':
             todoList = state.filter(tl => tl.id === action.id);
             if (todoList) {
@@ -57,23 +65,66 @@ export const todolistsReducer = (state: Array<TodolistBusinessType> = initState,
                 todoList.filter = action.filter
             }
             return [...state];
+        case "SET-TODOLISTS-TYPE":
+            //на входе в этот AC приходит серверТайп, преобразовываем его в бизнесТайп, добавляя фильтр
+            return action.todolists.map(tl => {
+                return {...tl, filter: "all"}
+            })
         default:
             return state;
     }
 }
 
-//Создают экшены для тестов, вызываются в тестах в параметре action
 export const removeTodolistAC = (todolistId: string): RemoveTodoListActionType => {
-    return { type: 'REMOVE-TODOLIST', id: todolistId}
+    return {type: 'REMOVE-TODOLIST', id: todolistId}
 }
 //в этом AC создаем ID здесь, а не в редьюсере, потому что этот AC используется в 2-ух редьюс.
 //во избежании вызова в 2 местах v1, вызываем его 1 раз здесь
-export const addTodolistAC = (todolistTitle: string): AddTodoListActionType => {
-    return { type: 'ADD-TODOLIST', title: todolistTitle, todolistId: v1()}
+export const addTodolistAC = (todolist: TodolistServerType): AddTodoListActionType => {
+    return {type: 'ADD-TODOLIST', todolist}
 }
 export const changeTodoListTitleAC = (todolistId: string, todolistTitle: string): ChangeTodoListTitleActionType => {
-    return { type: 'CHANGE-TODOLIST-TITLE', id: todolistId, title: todolistTitle}
+    return {type: 'CHANGE-TODOLIST-TITLE', id: todolistId, title: todolistTitle}
 }
 export const changeTodoListFilterAC = (todolistId: string, todolistFilter: FilterValuesType): ChangeTodoListFilterActionType => {
-    return { type: 'CHANGE-TODOLIST-FILTER', id: todolistId, filter: todolistFilter}
+    return {type: 'CHANGE-TODOLIST-FILTER', id: todolistId, filter: todolistFilter}
+}
+export const setTodolistsAC = (todolists: Array<TodolistServerType>): SetTodolistActionType => {
+    return {type: 'SET-TODOLISTS-TYPE', todolists: todolists}
+}
+// thunkCreator возвращает внутри себя санку (функция возвращает функцию(
+export const fetchTodolistsTC = () => {
+    //возвращаем санку ( анонимная функция(название не имеет смысла))
+    return (dispatch: Dispatch) => {
+        todolistsAPI.getTodolists()
+            //после ответа
+            .then(res => dispatch(setTodolistsAC(res)))
+    }
+}
+
+export const removeTodolistTC = (todolistId: string) => {
+    //возвращаем санку ( анонимная функция(название не имеет смысла))
+    return (dispatch: Dispatch) => {
+        todolistsAPI.deleteTodolist(todolistId)
+            //после ответа
+            .then(res => dispatch(removeTodolistAC(todolistId)))
+    }
+}
+
+export const addTodolistTC = (title: string) => {
+    //возвращаем санку ( анонимная функция(название не имеет смысла))
+    return (dispatch: Dispatch) => {
+        todolistsAPI.createTodolist(title)
+            //получаем с сервера
+            .then(res => dispatch(addTodolistAC(res.data.item)))
+    }
+}
+
+export const changeTodolistTitleTC = (todolistId: string, title: string) => {
+    //возвращаем санку ( анонимная функция(название не имеет смысла))
+    return (dispatch: Dispatch) => {
+        todolistsAPI.updateTodolist(todolistId, title)
+            //получаем с UI
+            .then(res => dispatch(changeTodoListTitleAC(todolistId, title)))
+    }
 }

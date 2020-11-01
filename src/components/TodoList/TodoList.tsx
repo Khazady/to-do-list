@@ -1,16 +1,16 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useEffect} from 'react'
 import AddItemForm from "../AddItemForm/AddItemForm";
 import EditableSpan from '../EditableSpan/EditableSpan';
 import {Button, ButtonGroup, IconButton} from "@material-ui/core";
 import {Delete, Home} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../state/store";
-import {addTaskAC} from "../../state/tasks-reducer";
+import {addTaskTC, fetchTasksTC} from "../../state/tasks-reducer";
 import {
     changeTodoListFilterAC,
-    changeTodoListTitleAC,
+    changeTodolistTitleTC,
     FilterValuesType,
-    removeTodolistAC
+    removeTodolistTC
 } from "../../state/todolists-reducer";
 import {Task} from "./Task/Task";
 import {TaskStatuses, TaskType} from "../../api/api";
@@ -47,11 +47,19 @@ export const TodoList = React.memo((props: TodoListPropsType) => {
     //запоминает функцию и т.к. пустой [], то никогда не создавай новую функцию
     //disp и AC не меняется и можно его не добавлять
     //обязательно вставляем всё, от чего зависит функция извне (props.id)
-    const addTask = useCallback((title: string) => dispatch(addTaskAC(props.id, title)), [dispatch, props.id]);
-    const removeTodoList = useCallback(() => dispatch(removeTodolistAC(props.id)), [dispatch, props.id]);
-    const changeTodoListTitle = useCallback((newTitle: string) => dispatch(changeTodoListTitleAC(props.id, newTitle)), [dispatch, props.id]);
+    const addTask = useCallback((title: string) => dispatch(addTaskTC(props.id, title)), [dispatch, props.id]);
+    const removeTodoList = useCallback(() => dispatch(removeTodolistTC(props.id)), [dispatch, props.id]);
+    const changeTodoListTitle = useCallback((newTitle: string) => {
+        const thunk = changeTodolistTitleTC(props.id, newTitle);
+        dispatch(thunk)
+    }, [dispatch, props.id]);
     //предполагаем, что в Button от MatUI внутри тоже есть React.memo, поэтому оборачиваем передаваемых в них коллбэк в useCallback
     const changeFilter = useCallback((id: string, value: FilterValuesType) => dispatch(changeTodoListFilterAC(props.id, value)), [dispatch, props.id]);
+
+
+    useEffect(() => {
+        dispatch(fetchTasksTC(props.id))
+    }, [dispatch, props.id])
 
     return (
         <div>

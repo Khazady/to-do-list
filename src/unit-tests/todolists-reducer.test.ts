@@ -2,10 +2,11 @@ import {
     addTodolistAC,
     changeTodoListFilterAC,
     changeTodoListTitleAC, FilterValuesType,
-    removeTodolistAC, TodolistBusinessType,
+    removeTodolistAC, setTodolistsAC, TodolistBusinessType,
     todolistsReducer
-} from './todolists-reducer';
+} from '../state/todolists-reducer';
 import {v1} from 'uuid';
+import {TodolistServerType} from "../api/api";
 
 let todolistId1: string;
 let todolistId2: string;
@@ -30,12 +31,17 @@ test('correct todoList should be removed', () => {
 
 test('correct todolist should be added', () => {
 
-    let newTodoListTitle = "New Todolist";
+    let newTodolist: TodolistServerType = {
+        title: "New Todolist",
+        addedDate: "",
+        order: 0,
+        id: "blabla"
+    }
 
-    const endState = todolistsReducer(startState, addTodolistAC(newTodoListTitle))
+    const endState = todolistsReducer(startState, addTodolistAC(newTodolist))
 
     expect(endState.length).toBe(3);
-    expect(endState[0].title).toBe(newTodoListTitle);
+    expect(endState[0].title).toBe(newTodolist.title);
 });
 
 test('correct todolist should change its name', () => {
@@ -57,4 +63,13 @@ test('correct filter of todolist should be changed', () => {
     expect(endState[0].filter).toBe("all");
     expect(endState[1].filter).toBe(newFilter);
 });
+
+test('Server todolists should transform to business todolists (add prop filter)', () => {
+
+    const action = setTodolistsAC(startState);
+
+    const endState = todolistsReducer([], action);
+
+    expect(endState.length).toBe(2)
+})
 

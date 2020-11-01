@@ -10,7 +10,7 @@ const instance = axios.create({
 
 
 //с API начинается разработка приложения, поэтому типы того, что приходит с сервера описываем в API
-export type TodolistType = {
+export type TodolistServerType = {
     id: string
     title: string
     addedDate: string
@@ -44,12 +44,12 @@ export enum TaskPriorities {
     Later = 4
 }
 export type TaskType = {
-    description: string
+    description: string | null
     title: string
     status: TaskStatuses
     priority: TaskPriorities
-    startDate: string
-    deadline: string
+    startDate: string | null
+    deadline: string | null
     id: string
     todoListId: string
     order: number
@@ -58,11 +58,11 @@ export type TaskType = {
 export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
-type UpdateTaskModelType = {
+export type UpdateTaskModelType = {
     title: string
-    description: string
-    status: number
-    priority: number
+    description: string | null
+    status: TaskStatuses
+    priority: TaskPriorities
     startDate: string | null
     deadline: string | null
 }
@@ -73,10 +73,10 @@ export const todolistsAPI = {
     getTodolists() {
         //оставляем в ответе только дату
         //generic того, что нам возвращает этот метод (в документации)
-        return instance.get<Array<TodolistType>>("todo-lists").then(res => res.data)
+        return instance.get<Array<TodolistServerType>>("todo-lists").then(res => res.data)
     },
     createTodolist(title: string) {
-        return instance.post<ResponseType<{item: TodolistType}>>("todo-lists", {title: title}).then(res => res.data)
+        return instance.post<ResponseType<{item: TodolistServerType}>>("todo-lists", {title: title}).then(res => res.data)
     },
     deleteTodolist(todolistId: string) {
         return instance.delete<ResponseType>(`todo-lists/${todolistId}`).then(res => res.data)
@@ -91,7 +91,7 @@ export const tasksAPI = {
         //получаем порцию тасок конкретного todolist
         //generic того, что нам возвращает этот метод (в документации)
         //в Item будет массив объектов {items:TaskType}
-        return instance.get<GetTaskResponse<Array<{items:TaskType}>>>(`todo-lists/${todolistId}/tasks`).then(res => res.data)
+        return instance.get<GetTaskResponse<Array<TaskType>>>(`todo-lists/${todolistId}/tasks`).then(res => res.data)
     },
     createTask(todolistId: string, title: string) {
         return instance.post<ResponseType<{item: TaskType}>>(`todo-lists/${todolistId}/tasks`, {title: title}).then(res => res.data)

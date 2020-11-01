@@ -1,10 +1,10 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import './App.css';
 import {TodoList} from "./components/TodoList/TodoList";
 import AddItemForm from "./components/AddItemForm/AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Menu, Toolbar, Typography, Paper} from "@material-ui/core";
 import {
-    addTodolistAC, TodolistBusinessType,
+    addTodolistTC, fetchTodolistsTC, TodolistBusinessType,
 } from "./state/todolists-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./state/store";
@@ -20,8 +20,12 @@ function AppWithRedux() {
 
     //запоминает функцию и т.к. пустой [], то никогда не создавай новую функцию при перерисовке
     //добавляем dispatch в [], просто чтобы реакт не ругался в консоли (disp не меняется и можно было бы его не добавлять)
-    const addTodoList = useCallback( (title: string) => dispatch(addTodolistAC(title)), [dispatch])
+    const addTodoList = useCallback( (title: string) => dispatch(addTodolistTC(title)), [dispatch])
 
+    useEffect( () => {
+        //диспатчим именно вызов TC
+        dispatch(fetchTodolistsTC())
+    }, [dispatch])
 
     return (
       <div className="App">
