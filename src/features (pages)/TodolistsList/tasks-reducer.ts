@@ -1,7 +1,7 @@
 import {AddTodoListActionType, RemoveTodoListActionType, SetTodolistActionType} from "./todolists-reducer";
-import {TaskPriorities, tasksAPI, TasksStateType, TaskStatuses, TaskType, UpdateTaskModelType} from "../api/api";
+import {TaskPriorities, tasksAPI, TaskStatuses, TaskType, UpdateTaskModelType} from "../../api/api";
 import {Dispatch} from "redux";
-import {AppRootStateType} from "./store";
+import {AppRootStateType} from "../../app/store";
 
 // reducer
 const initState: TasksStateType = {}
@@ -148,6 +148,9 @@ type ActionsType =
   | AddTodoListActionType
   | RemoveTodoListActionType
   | SetTodolistActionType
+export type TasksStateType = {
+    [key: string]: Array<TaskType>
+}
 //тип нужен, чтобы сделать 1 TC на несколько операций апдейта таски, чтобы не отправлять сразу всё
 export type UpdateBusinessTaskModelType = {
     title?: string

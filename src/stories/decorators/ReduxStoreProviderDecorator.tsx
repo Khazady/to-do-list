@@ -2,9 +2,9 @@ import React from 'react'
 import {Provider} from 'react-redux'
 import {combineReducers, createStore} from 'redux'
 import {v1} from 'uuid'
-import {tasksReducer} from "../../state/tasks-reducer";
-import {todolistsReducer} from '../../state/todolists-reducer';
-import {AppRootStateType} from "../../state/store";
+import {tasksReducer} from "../../features (pages)/TodolistsList/tasks-reducer";
+import {todolistsReducer} from '../../features (pages)/TodolistsList/todolists-reducer';
+import {AppRootStateType} from "../../app/store";
 import {TaskPriorities, TaskStatuses} from "../../api/api";
 
 //decorator это как HOC, оборачивает сторисы, в данном случае в провайдер

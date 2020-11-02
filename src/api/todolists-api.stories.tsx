@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react'
-import {todolistsAPI} from "../api/api";
+import {todolistsAPI} from "./api";
 
 export default {
-    title: 'Todolists-API',
+    title: 'TodolistsList-API',
 }
 
 export const GetTodolists = () => {

@@ -1,17 +1,17 @@
 import React from 'react';
-import {ReduxStoreProviderDecorator} from "./decorators/ReduxStoreProviderDecorator";
-import AppWithRedux from "../app/AppWithRedux";
+import {ReduxStoreProviderDecorator} from "../stories/decorators/ReduxStoreProviderDecorator";
+import App from "./App";
 
 //настройки
 export default {
-    title: 'AppWithRedux Stories',
-    component: AppWithRedux,
+    title: 'App Stories',
+    component: App,
     decorators: [ReduxStoreProviderDecorator]
 };
 
 //AddItemForm в пропсах ждёт колбек, поэтому передаем туда action (фейковый коллбек)
 export const BaseExample = () => {
     return (
-        <AppWithRedux/>
+        <App/>
     )
 }

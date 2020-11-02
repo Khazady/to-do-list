@@ -94,9 +94,6 @@ export type TaskType = {
     order: number
     addedDate: string
 }
-export type TasksStateType = {
-    [key: string]: Array<TaskType>
-}
 export type UpdateTaskModelType = {
     title: string
     description: string | null

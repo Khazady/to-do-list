@@ -1,5 +1,5 @@
 import {Dispatch} from "redux";
-import {todolistsAPI, TodolistServerType} from "../api/api";
+import {todolistsAPI, TodolistServerType} from "../../api/api";
 
 //reducer
 const initState: Array<TodolistBusinessType> = []

@@ -2,13 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import {Provider} from "react-redux";
-import {store} from "./state/store";
-import AppWithRedux from './app/AppWithRedux';
+import {store} from "./app/store";
+import App from './app/App';
 
 ReactDOM.render(
   //провайдер расшаривает стор для всех своих детей
   <Provider store={store}>
-      <AppWithRedux/>
+      <App/>
   </Provider>,
 
   document.getElementById('root'));

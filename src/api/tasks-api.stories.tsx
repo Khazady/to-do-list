@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react'
-import {tasksAPI} from "../api/api";
+import React, {useState} from 'react'
+import {tasksAPI} from "./api";
 //доделать useState-ы и кнопки для всех(как в deleteTask) и кнопку в getTask которая будет createTask, если там пусто(последние 15 минут 13 урока)
 export default {
     title: 'Tasks-API',

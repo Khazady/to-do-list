@@ -1,11 +1,11 @@
 import {useDispatch} from "react-redux";
-import {deleteTaskTC, updateTaskTC} from "../../../state/tasks-reducer";
+import {deleteTaskTC, updateTaskTC} from "../../tasks-reducer";
 import React, {ChangeEvent, useCallback} from "react";
 import {Checkbox, IconButton} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
-import {FilterValuesType} from "../../../state/todolists-reducer";
-import {TaskStatuses, TaskType} from "../../../api/api";
-import EditableSpan from "../../../components (common)/EditableSpan/EditableSpan";
+import {FilterValuesType} from "../../todolists-reducer";
+import {TaskStatuses, TaskType} from "../../../../api/api";
+import EditableSpan from "../../../../components (common)/EditableSpan/EditableSpan";
 
 type TaskPropsType = {
     task: TaskType
