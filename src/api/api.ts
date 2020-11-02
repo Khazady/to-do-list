@@ -1,3 +1,4 @@
+//DAL крайняя точка клиента перед сервером, поэтому здесь не может быть других импортов кроме axios
 import axios from "axios";
 
 const instance = axios.create({
@@ -8,6 +9,44 @@ const instance = axios.create({
     }
 });
 
+
+//api
+export const todolistsAPI = {
+    getTodolists() {
+        //оставляем в ответе только дату
+        //generic того, что нам возвращает этот метод (в документации)
+        return instance.get<Array<TodolistServerType>>("todo-lists").then(res => res.data)
+    },
+    createTodolist(title: string) {
+        return instance.post<ResponseType<{item: TodolistServerType}>>("todo-lists", {title: title}).then(res => res.data)
+    },
+    deleteTodolist(todolistId: string) {
+        return instance.delete<ResponseType>(`todo-lists/${todolistId}`).then(res => res.data)
+    },
+    updateTodolist(todolistId: string, title: string) {
+        return instance.put<ResponseType>(`todo-lists/${todolistId}`, {title: title}).then(res => res.data)
+    }
+}
+export const tasksAPI = {
+    getTasks(todolistId: string) {
+        //получаем порцию тасок конкретного todolist
+        //generic того, что нам возвращает этот метод (в документации)
+        //в Item будет массив объектов {items:TaskType}
+        return instance.get<GetTaskResponse<Array<TaskType>>>(`todo-lists/${todolistId}/tasks`).then(res => res.data)
+    },
+    createTask(todolistId: string, title: string) {
+        return instance.post<ResponseType<{item: TaskType}>>(`todo-lists/${todolistId}/tasks`, {title: title}).then(res => res.data)
+    },
+    deleteTask(todolistId: string, taskId: string) {
+        return instance.delete<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`).then(res => res.data)
+    },
+    updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
+        return instance.put<ResponseType<{item: TaskType}>>(`todo-lists/${todolistId}/tasks/${taskId}`, model).then(res => res.data)
+    }
+}
+
+
+// types
 
 //с API начинается разработка приложения, поэтому типы того, что приходит с сервера описываем в API
 export type TodolistServerType = {
@@ -65,41 +104,4 @@ export type UpdateTaskModelType = {
     priority: TaskPriorities
     startDate: string | null
     deadline: string | null
-}
-
-
-
-export const todolistsAPI = {
-    getTodolists() {
-        //оставляем в ответе только дату
-        //generic того, что нам возвращает этот метод (в документации)
-        return instance.get<Array<TodolistServerType>>("todo-lists").then(res => res.data)
-    },
-    createTodolist(title: string) {
-        return instance.post<ResponseType<{item: TodolistServerType}>>("todo-lists", {title: title}).then(res => res.data)
-    },
-    deleteTodolist(todolistId: string) {
-        return instance.delete<ResponseType>(`todo-lists/${todolistId}`).then(res => res.data)
-    },
-    updateTodolist(todolistId: string, title: string) {
-        return instance.put<ResponseType>(`todo-lists/${todolistId}`, {title: title}).then(res => res.data)
-    }
-}
-
-export const tasksAPI = {
-    getTasks(todolistId: string) {
-        //получаем порцию тасок конкретного todolist
-        //generic того, что нам возвращает этот метод (в документации)
-        //в Item будет массив объектов {items:TaskType}
-        return instance.get<GetTaskResponse<Array<TaskType>>>(`todo-lists/${todolistId}/tasks`).then(res => res.data)
-    },
-    createTask(todolistId: string, title: string) {
-        return instance.post<ResponseType<{item: TaskType}>>(`todo-lists/${todolistId}/tasks`, {title: title}).then(res => res.data)
-    },
-    deleteTask(todolistId: string, taskId: string) {
-        return instance.delete<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`).then(res => res.data)
-    },
-    updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
-        return instance.put<ResponseType<{item: TaskType}>>(`todo-lists/${todolistId}/tasks/${taskId}`, model).then(res => res.data)
-    }
 }
