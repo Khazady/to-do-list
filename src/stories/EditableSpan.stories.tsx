@@ -1,6 +1,6 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
-import EditableSpan from '../components/EditableSpan/EditableSpan';
+import EditableSpan from "../components (common)/EditableSpan/EditableSpan";
 
 export default {
     title: 'EditableSpan Stories',

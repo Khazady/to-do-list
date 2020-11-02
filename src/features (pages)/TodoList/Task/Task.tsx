@@ -1,10 +1,10 @@
 import {useDispatch} from "react-redux";
+import {deleteTaskTC, updateTaskTC} from "../../../state/tasks-reducer";
 import React, {ChangeEvent, useCallback} from "react";
 import {Checkbox, IconButton} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
-import {TaskStatuses, TaskType} from "../../../api/api";
 import {FilterValuesType} from "../../../state/todolists-reducer";
-import {deleteTaskTC, updateTaskTC} from "../../../state/tasks-reducer";
+import {TaskStatuses, TaskType} from "../../../api/api";
 import EditableSpan from "../../../components (common)/EditableSpan/EditableSpan";
 
 type TaskPropsType = {
@@ -19,10 +19,12 @@ export const Task = React.memo((props: TaskPropsType) => {
     const RemoveTask = useCallback(() => {
         dispatch(deleteTaskTC(props.todolistId, props.task.id))
         },
+        //массив зависимостей (все, что используем извне)
         [dispatch, props.task.id, props.todolistId]);
     const ChangeTaskStatus = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+        let newStatusValue = e.currentTarget.checked;
         //отправляем в модельке только нужное для изменения свойство
-        dispatch(updateTaskTC(props.todolistId, props.task.id, {status: e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New}));
+        dispatch(updateTaskTC(props.todolistId, props.task.id, {status: newStatusValue ? TaskStatuses.Completed : TaskStatuses.New}));
     }, [dispatch, props.task.id, props.todolistId]);
     const ChangeTaskTitle = useCallback((newValue: string) =>
             //отправляем в модельке только нужное для изменения свойство
@@ -41,4 +43,4 @@ export const Task = React.memo((props: TaskPropsType) => {
             </IconButton>
         </li>
     )
-})
+});

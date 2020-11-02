@@ -1,6 +1,4 @@
 import React, {useCallback, useEffect} from 'react'
-import AddItemForm from "../AddItemForm/AddItemForm";
-import EditableSpan from '../EditableSpan/EditableSpan';
 import {Button, ButtonGroup, IconButton} from "@material-ui/core";
 import {Delete, Home} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
@@ -14,6 +12,8 @@ import {
 } from "../../state/todolists-reducer";
 import {Task} from "./Task/Task";
 import {TaskStatuses, TaskType} from "../../api/api";
+import AddItemForm from "../../components (common)/AddItemForm/AddItemForm";
+import EditableSpan from "../../components (common)/EditableSpan/EditableSpan";
 
 type TodoListPropsType = {
     id: string

@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import AppWithRedux from "./AppWithRedux";
 import {Provider} from "react-redux";
 import {store} from "./state/store";
+import AppWithRedux from './app/AppWithRedux';
 
 ReactDOM.render(
   //провайдер расшаривает стор для всех своих детей
