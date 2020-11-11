@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/Khazady/to-do-list/static/css/main.166aaef3.chunk.css",
+    "main.js": "/Khazady/to-do-list/static/js/main.91bea76b.chunk.js",
+    "main.js.map": "/Khazady/to-do-list/static/js/main.91bea76b.chunk.js.map",
+    "runtime-main.js": "/Khazady/to-do-list/static/js/runtime-main.2f47a3a3.js",
+    "runtime-main.js.map": "/Khazady/to-do-list/static/js/runtime-main.2f47a3a3.js.map",
+    "static/js/2.92001f09.chunk.js": "/Khazady/to-do-list/static/js/2.92001f09.chunk.js",
+    "static/js/2.92001f09.chunk.js.map": "/Khazady/to-do-list/static/js/2.92001f09.chunk.js.map",
+    "index.html": "/Khazady/to-do-list/index.html",
+    "precache-manifest.6bfb22b5da54561a360778298f55f45f.js": "/Khazady/to-do-list/precache-manifest.6bfb22b5da54561a360778298f55f45f.js",
+    "service-worker.js": "/Khazady/to-do-list/service-worker.js",
+    "static/css/main.166aaef3.chunk.css.map": "/Khazady/to-do-list/static/css/main.166aaef3.chunk.css.map",
+    "static/js/2.92001f09.chunk.js.LICENSE.txt": "/Khazady/to-do-list/static/js/2.92001f09.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.2f47a3a3.js",
+    "static/js/2.92001f09.chunk.js",
+    "static/css/main.166aaef3.chunk.css",
+    "static/js/main.91bea76b.chunk.js"
+  ]
+}
