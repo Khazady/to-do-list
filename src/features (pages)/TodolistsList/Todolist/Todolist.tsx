@@ -14,16 +14,19 @@ import {Task} from "./Task/Task";
 import {TaskStatuses, TaskType} from "../../../api/api";
 import AddItemForm from "../../../components (common)/AddItemForm/AddItemForm";
 import EditableSpan from "../../../components (common)/EditableSpan/EditableSpan";
+import {RequestStatusType} from "../../../app/app-reducer";
 
 type TodoListPropsType = {
     id: string
     title: string
     filter: FilterValuesType
+    entityStatus: RequestStatusType
 }
 
 export const Todolist = React.memo((props: TodoListPropsType) => {
     console.log("Todolist is called")
     const dispatch = useDispatch()
+
 
     //первый дженерик тип глобал стейта, второй того, что мы селектим
     //вместо mapStateToProps, храним здесь стейт, нужный для этой компоненты
@@ -65,11 +68,11 @@ export const Todolist = React.memo((props: TodoListPropsType) => {
         <div>
             <h3>
                 <EditableSpan title={props.title} onChange={changeTodoListTitle}/>
-                <IconButton onClick={removeTodoList}>
+                <IconButton onClick={removeTodoList} disabled={props.entityStatus === "loading"}>
                     <Delete/>
                 </IconButton>
             </h3>
-            <AddItemForm addItem={addTask}/>
+            <AddItemForm addItem={addTask} disabled={props.entityStatus === "loading"}/>
             <ul>
                 {tasksForTodoList.map(task =>
                     <Task

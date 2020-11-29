@@ -36,6 +36,7 @@ export const TodolistsList = React.memo(() => {
                                   id={todolist.id}
                                   title={todolist.title}
                                   filter={todolist.filter}
+                                  entityStatus={todolist.entityStatus}
                                 />
                             </Paper>
                         </Grid>

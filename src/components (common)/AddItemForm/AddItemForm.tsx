@@ -4,6 +4,8 @@ import {AddBox} from "@material-ui/icons";
 
 type AddItemFormPropsType = {
     addItem: (title: string) => void
+    //sometimes we need to disable Add button in some cases(удаляющийся TL)
+    disabled?: boolean
 }
 
 //React.memo предотвращает перерисовку когда приходят такие же пропсы
@@ -50,7 +52,7 @@ export const AddItemForm = React.memo(function(props: AddItemFormPropsType) {
                      label={"Title"}
                      helperText={error}
           />
-          <IconButton color="primary" onClick={addItem}>
+          <IconButton color="primary" onClick={addItem} disabled={props.disabled}>
               <AddBox/>
           </IconButton>
       </div>

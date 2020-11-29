@@ -6,18 +6,20 @@ import {tasksReducer} from "../../features (pages)/TodolistsList/tasks-reducer";
 import {todolistsReducer} from '../../features (pages)/TodolistsList/todolists-reducer';
 import {AppRootStateType} from "../../app/store";
 import {TaskPriorities, TaskStatuses} from "../../api/api";
+import {appReducer} from "../../app/app-reducer";
 
 //decorator это как HOC, оборачивает сторисы, в данном случае в провайдер
 
 const rootReducer = combineReducers({
     tasks: tasksReducer,
-    todolists: todolistsReducer
+    todolists: todolistsReducer,
+    app: appReducer
 })
 
 const initialGlobalState: AppRootStateType = {
     todolists: [
-        {id: "todolistId1", title: "What to learn", filter: "all", addedDate: "", order: 0},
-        {id: "todolistId2", title: "What to buy", filter: "all", addedDate: "", order: 0}
+        {id: "todolistId1", title: "What to learn", filter: "all", addedDate: "", order: 0, entityStatus: "idle"},
+        {id: "todolistId2", title: "What to buy", filter: "all", addedDate: "", order: 0, entityStatus: "idle"}
     ],
     tasks: {
         ["todolistId1"]: [
@@ -72,7 +74,8 @@ const initialGlobalState: AppRootStateType = {
                 addedDate: ""
             }
         ]
-    }
+    },
+    app: {status: "idle", error: "some error"}
 };
 
 export const storyBookStore = createStore(rootReducer, initialGlobalState);

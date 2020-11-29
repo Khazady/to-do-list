@@ -2,6 +2,7 @@ import {AddTodoListActionType, RemoveTodoListActionType, SetTodolistActionType} 
 import {TaskPriorities, tasksAPI, TaskStatuses, TaskType, UpdateTaskModelType} from "../../api/api";
 import {Dispatch} from "redux";
 import {AppRootStateType} from "../../app/store";
+import {SetAppStatusActionType, setAppErrorAC, setAppStatusAC, SetAppErrorActionType} from "../../app/app-reducer";
 
 // reducer
 const initState: TasksStateType = {}
@@ -86,31 +87,57 @@ export const setTasksAC = (tasks: Array<TaskType>, todolistId: string) =>
 export const fetchTasksTC = (todolistId: string) =>
   //возвращаем санку ( анонимная функция(название не имеет смысла))
   (dispatch: Dispatch<ActionsType>) => {
+      //preloader
+      dispatch(setAppStatusAC('loading'))
       tasksAPI.getTasks(todolistId)
         //после ответа
-        .then(res => dispatch(setTasksAC(res.items, todolistId)))
+        .then(res => {
+            dispatch(setTasksAC(res.items, todolistId))
+            //preloader cancel
+            dispatch(setAppStatusAC('succeeded'))
+        })
   }
 export const deleteTaskTC = (todolistId: string, taskId: string) =>
   //возвращаем санку ( анонимная функция(название не имеет смысла))
   (dispatch: Dispatch<ActionsType>) => {
+      //preloader ставим перед запросом на серв
+      dispatch(setAppStatusAC('loading'))
       //сначала делаем запрос на сервер на удаление таски
       tasksAPI.deleteTask(todolistId, taskId)
         //только потом диспатчим изменение в наш state
         .then(res => {
               const action = removeTaskAC(todolistId, taskId)
               dispatch(action)
+              dispatch(setAppStatusAC('succeeded'))
           }
         )
   }
 export const addTaskTC = (todolistId: string, title: string) =>
   //возвращаем санку ( анонимная функция(название не имеет смысла))
   (dispatch: Dispatch<ActionsType>) => {
+      //preloader
+      dispatch(setAppStatusAC('loading'))
       tasksAPI.createTask(todolistId, title)
-        .then(res => dispatch(addTaskAC(res.data.item)))
+        .then(res => {
+            if (res.resultCode === 0) {
+                dispatch(addTaskAC(res.data.item))
+                //preloader cancel
+                dispatch(setAppStatusAC('succeeded'))
+            } else {
+                if (res.messages.length) {
+                    dispatch(setAppErrorAC(res.messages[0]))
+                } else {
+                    dispatch(setAppErrorAC('Some error occurred'))
+                }
+                dispatch(setAppStatusAC('failed'))
+            }
+        })
   }
 export const updateTaskTC = (todolistId: string, taskId: string, businessModel: UpdateBusinessTaskModelType) =>
   //возвращаем санку ( анонимная функция(название не имеет смысла))
   (dispatch: Dispatch<ActionsType>, getState: () => AppRootStateType) => {
+      //preloader
+      dispatch(setAppStatusAC('loading'))
       const state = getState()
       //ищем нужную таскую
       const task = state.tasks[todolistId].find(t => t.id === taskId)
@@ -133,7 +160,11 @@ export const updateTaskTC = (todolistId: string, taskId: string, businessModel: 
           ...businessModel
       }
       tasksAPI.updateTask(todolistId, taskId, serverModal)
-        .then(res => dispatch(updateTaskAC(todolistId, taskId, businessModel)))
+        .then(res => {
+            dispatch(updateTaskAC(todolistId, taskId, businessModel))
+            //preloader cancel
+            dispatch(setAppStatusAC('succeeded'))
+        })
   }
 
 
@@ -148,6 +179,8 @@ type ActionsType =
   | AddTodoListActionType
   | RemoveTodoListActionType
   | SetTodolistActionType
+  | SetAppStatusActionType
+  | SetAppErrorActionType
 export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
