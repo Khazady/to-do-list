@@ -8,13 +8,13 @@ import {
     changeTodoListFilterAC,
     changeTodolistTitleTC,
     FilterValuesType,
-    removeTodolistTC, TodolistBusinessType
+    removeTodolistTC,
+    TodolistBusinessType
 } from "../todolists-reducer";
 import {Task} from "./Task/Task";
 import {TaskStatuses, TaskType} from "../../../api/api";
 import AddItemForm from "../../../components (common)/AddItemForm/AddItemForm";
 import EditableSpan from "../../../components (common)/EditableSpan/EditableSpan";
-import {RequestStatusType} from "../../../app/app-reducer";
 
 type TodoListPropsType = {
     todolist: TodolistBusinessType

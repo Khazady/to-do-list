@@ -3,12 +3,14 @@ import {todolistsReducer} from "../features (pages)/TodolistsList/todolists-redu
 import {tasksReducer} from "../features (pages)/TodolistsList/tasks-reducer";
 import thunk from "redux-thunk";
 import {appReducer} from "./app-reducer";
+import {authReducer} from "../features (pages)/Login/auth-reducer";
 
 const rootReducer = combineReducers({
     todolists: todolistsReducer,
     tasks: tasksReducer,
     //в ветке app всё что касается апп в общем(напр. светлая/темная тема, язык прилож., какой юзер сейчас авториз.)
-    app: appReducer
+    app: appReducer,
+    auth: authReducer
 })
 
 //создаем стор, дополняя его своим стейтом и подключаем Middleware из thunk

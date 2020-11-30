@@ -8,13 +8,15 @@ import {AppRootStateType} from "../../app/store";
 import {TaskPriorities, TaskStatuses} from "../../api/api";
 import {appReducer} from "../../app/app-reducer";
 import thunk from "redux-thunk";
+import {authReducer} from "../../features (pages)/Login/auth-reducer";
 
 //decorator это как HOC, оборачивает сторисы, в данном случае в провайдер
 
 const rootReducer = combineReducers({
     tasks: tasksReducer,
     todolists: todolistsReducer,
-    app: appReducer
+    app: appReducer,
+    auth: authReducer
 })
 
 const initialGlobalState: AppRootStateType = {
@@ -76,7 +78,8 @@ const initialGlobalState: AppRootStateType = {
             }
         ]
     },
-    app: {status: "idle", error: "some error"}
+    app: {status: "idle", error: "some error", isInitialized: true},
+    auth: {isLoggedIn: false}
 };
 
 export const storyBookStore = createStore(rootReducer, initialGlobalState, applyMiddleware(thunk));

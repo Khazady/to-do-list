@@ -44,6 +44,18 @@ export const tasksAPI = {
         return instance.put<ResponseType<{item: TaskType}>>(`todo-lists/${todolistId}/tasks/${taskId}`, model).then(res => res.data)
     }
 }
+export const authAPI = {
+    login(loginData: LoginParamsType) {
+        //возвращает promise
+        return instance.post<ResponseType<{userId?: number}>>(`auth/login`, loginData).then(res => res.data)
+    },
+    me() {
+        return instance.get<ResponseType<{id:number, email: string, login: string}>>(`auth/me`).then(res => res.data)
+    },
+    logout() {
+        return instance.delete<ResponseType>(`auth/login`).then(res => res.data)
+    }
+}
 
 
 // types
@@ -101,4 +113,11 @@ export type UpdateTaskModelType = {
     priority: TaskPriorities
     startDate: string | null
     deadline: string | null
+}
+
+export type LoginParamsType = {
+    email: string
+    password: string
+    rememberMe: boolean
+    captcha?: string
 }
