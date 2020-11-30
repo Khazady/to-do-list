@@ -11,7 +11,8 @@ type TaskPropsType = {
     task: TaskType
     filter: FilterValuesType
     todolistId: string
-
+    //дизейблим одновременно в TL, можно иначе, но нет UX-инженера :)
+    disabled?: boolean
 }
 export const Task = React.memo((props: TaskPropsType) => {
     const dispatch = useDispatch();
@@ -36,9 +37,9 @@ export const Task = React.memo((props: TaskPropsType) => {
             className={props.filter !== "completed" && props.task.status === TaskStatuses.Completed ? "is-done" : ""}>
             {/*прозрачный класс добавится когда таска чекнута и не в фильтре комплитед*/}
             <Checkbox checked={props.task.status === TaskStatuses.Completed} onChange={ChangeTaskStatus}
-                      color="primary"/>
-            <EditableSpan title={props.task.title} onChange={ChangeTaskTitle}/>
-            <IconButton onClick={RemoveTask}>
+                      color="primary" disabled={props.disabled}/>
+            <EditableSpan title={props.task.title} onChange={ChangeTaskTitle} disabled={props.disabled}/>
+            <IconButton onClick={RemoveTask} disabled={props.disabled}>
                 <Delete/>
             </IconButton>
         </li>

@@ -15,17 +15,16 @@ export function ErrorSnackbar() {
     let dispatch = useDispatch()
 
     const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-        //??????????
         if (reason === "clickaway") {
             return;
         }
-        //??????????????
-        setTimeout(() =>dispatch(setAppErrorAC(null)), 3000)
+        dispatch(setAppErrorAC(null))
     };
 
+    //show only when error isn't null
+    const isOpen = error !== null
     return (
-      //show only when error isn't null
-      <Snackbar open={error !== null} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={isOpen} autoHideDuration={3000} onClose={handleClose}>
           <Alert onClose={handleClose} severity="error">{error}</Alert>
       </Snackbar>
     );

@@ -18,7 +18,7 @@ export const setAppErrorAC = (error: string | null) => ({type: 'APP/SET-ERROR', 
 
 // types
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
-type InitialStateType = {
+export type InitialStateType = {
     // происходит ли сейчас взаимодействие с сервером
     status: RequestStatusType
     error: string | null

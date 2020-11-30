@@ -8,7 +8,11 @@ import {useSelector} from "react-redux";
 import {AppRootStateType} from "./store";
 import { RequestStatusType } from './app-reducer';
 
-function App() {
+//for storybook
+type PropsType = {demo?:boolean}
+
+//demo default value false (if (typeof demo === 'undefined') )
+function App({demo = false}: PropsType) {
     let status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
     return (
       <div className="App">
@@ -23,9 +27,9 @@ function App() {
                   <Button color="inherit">Login</Button>
               </Toolbar>
           </AppBar>
-          { status === "loading" && <LinearProgress color="secondary" /> }
+          { status === "loading" && <div className="progress-bar"><LinearProgress color="secondary"/></div>}
           <Container fixed>
-              <TodolistsList/>
+              <TodolistsList demo={demo}/>
           </Container>
           <ErrorSnackbar/>
       </div>

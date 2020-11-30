@@ -7,6 +7,7 @@ import {
     SetAppErrorActionType,
     RequestStatusType
 } from "../../app/app-reducer";
+import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
 
 //reducer
 const initState: Array<TodolistBusinessType> = []
@@ -76,10 +77,15 @@ export const removeTodolistTC = (todolistId: string) => (dispatch: Dispatch<Acti
     todolistsAPI.deleteTodolist(todolistId)
       //после ответа
       .then(res => {
-          dispatch(removeTodolistAC(todolistId))
-          //preloader cancel
-          dispatch(setAppStatusAC('succeeded'))
-      })
+            if (res.resultCode === 0) {
+                dispatch(removeTodolistAC(todolistId))
+                //preloader cancel
+                dispatch(setAppStatusAC('succeeded'))
+            } else {
+                handleServerAppError(res, dispatch)
+            }
+        }
+      ).catch((error) => handleServerNetworkError(error, dispatch))
 }
 export const addTodolistTC = (title: string) => (dispatch: Dispatch<ActionsType>) => {
     //preloader
@@ -87,10 +93,14 @@ export const addTodolistTC = (title: string) => (dispatch: Dispatch<ActionsType>
     todolistsAPI.createTodolist(title)
       //получаем с сервера
       .then(res => {
-          dispatch(addTodolistAC(res.data.item))
-          //preloader cancel
-          dispatch(setAppStatusAC('succeeded'))
-      })
+          if (res.resultCode === 0) {
+              dispatch(addTodolistAC(res.data.item))
+              //preloader cancel
+              dispatch(setAppStatusAC('succeeded'))
+          } else {
+              handleServerAppError(res, dispatch)
+          }
+      }).catch((error) => handleServerNetworkError(error, dispatch))
 }
 export const changeTodolistTitleTC = (todolistId: string, title: string) => (dispatch: Dispatch<ActionsType>) => {
     //preloader
@@ -110,9 +120,8 @@ export const changeTodolistTitleTC = (todolistId: string, title: string) => (dis
               }
               dispatch(setAppStatusAC('failed'))
           }
-      })
+      }).catch(error => handleServerNetworkError(error, dispatch))
 }
-
 
 // types
 

@@ -6,7 +6,11 @@ import {Grid, Paper} from "@material-ui/core";
 import AddItemForm from "../../components (common)/AddItemForm/AddItemForm";
 import {Todolist} from "./Todolist/Todolist";
 
-export const TodolistsList = React.memo(() => {
+//for storybook
+type PropsType = {demo?:boolean}
+
+//demo default value false (if (typeof demo === 'undefined') )
+export const TodolistsList: React.FC<PropsType> = React.memo(({demo=false}) => {
     const dispatch = useDispatch();
 
     const todolists = useSelector<AppRootStateType, Array<TodolistBusinessType>>(state => state.todolists)
@@ -16,6 +20,8 @@ export const TodolistsList = React.memo(() => {
     const addTodoList = useCallback((title: string) => dispatch(addTodolistTC(title)), [dispatch])
 
     useEffect(() => {
+        //убираем из storybook работу с сервером (после ретурна код не выполняется)
+        if(demo) return
         //самая первая загрузка листов
         dispatch(fetchTodolistsTC())
     }, [dispatch])
@@ -33,10 +39,9 @@ export const TodolistsList = React.memo(() => {
                         <Grid item key={todolist.id}>
                             <Paper style={{padding: "10px"}}>
                                 <Todolist
-                                  id={todolist.id}
-                                  title={todolist.title}
-                                  filter={todolist.filter}
-                                  entityStatus={todolist.entityStatus}
+                                  todolist={todolist}
+
+                                  demo={demo}
                                 />
                             </Paper>
                         </Grid>

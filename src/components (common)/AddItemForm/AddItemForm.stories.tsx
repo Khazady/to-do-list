@@ -22,3 +22,8 @@ export const WithActionExample = () => {
         <AddItemForm addItem={callback}/>
     )
 }
+export const DisabledExample = () => {
+    return (
+        <AddItemForm addItem={callback} disabled/>
+    )
+}

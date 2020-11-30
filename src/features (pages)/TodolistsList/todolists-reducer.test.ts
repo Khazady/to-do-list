@@ -1,5 +1,6 @@
 import {
     addTodolistAC,
+    changeTodolistEntityStatusAC,
     changeTodoListFilterAC,
     changeTodoListTitleAC, FilterValuesType,
     removeTodolistAC, setTodolistsAC, TodolistBusinessType,
@@ -7,18 +8,19 @@ import {
 } from './todolists-reducer';
 import {v1} from 'uuid';
 import {TodolistServerType} from "../../api/api";
+import {appReducer, RequestStatusType} from "../../app/app-reducer";
 
 let todolistId1: string;
 let todolistId2: string;
-let startState: Array<TodolistBusinessType> = [];
+let startState: Array<TodolistBusinessType>;
 
 //перед каждым тестом задает стартовые значения
 beforeEach(() => {
     todolistId1 = v1();
     todolistId2 = v1();
     startState = [
-        {id: todolistId1, title: "What to learn", filter: "all", addedDate:'',order:0},
-        {id: todolistId2, title: "What to buy", filter: "all", addedDate:'',order:0}
+        {id: todolistId1, title: "What to learn", filter: "all", addedDate:'',order:0, entityStatus: "idle"},
+        {id: todolistId2, title: "What to buy", filter: "all", addedDate:'',order:0, entityStatus: "idle"}
     ]
 })
 
@@ -72,4 +74,15 @@ test('Server todolists should transform to business todolists (add prop filter)'
 
     expect(endState.length).toBe(2)
 })
+
+test('correct entityStatus of todolist should be changed', () => {
+
+    let newEntityStatus: RequestStatusType = "succeeded";
+
+    const endState = todolistsReducer(startState, changeTodolistEntityStatusAC(todolistId2, newEntityStatus));
+
+    expect(endState[0].entityStatus).toBe("idle");
+    expect(endState[1].entityStatus).toBe(newEntityStatus);
+});
+
 

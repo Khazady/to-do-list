@@ -1,12 +1,13 @@
 import React from 'react'
 import {Provider} from 'react-redux'
-import {combineReducers, createStore} from 'redux'
+import {applyMiddleware, combineReducers, createStore} from 'redux'
 import {v1} from 'uuid'
 import {tasksReducer} from "../../features (pages)/TodolistsList/tasks-reducer";
 import {todolistsReducer} from '../../features (pages)/TodolistsList/todolists-reducer';
 import {AppRootStateType} from "../../app/store";
 import {TaskPriorities, TaskStatuses} from "../../api/api";
 import {appReducer} from "../../app/app-reducer";
+import thunk from "redux-thunk";
 
 //decorator это как HOC, оборачивает сторисы, в данном случае в провайдер
 
@@ -19,7 +20,7 @@ const rootReducer = combineReducers({
 const initialGlobalState: AppRootStateType = {
     todolists: [
         {id: "todolistId1", title: "What to learn", filter: "all", addedDate: "", order: 0, entityStatus: "idle"},
-        {id: "todolistId2", title: "What to buy", filter: "all", addedDate: "", order: 0, entityStatus: "idle"}
+        {id: "todolistId2", title: "What to buy", filter: "all", addedDate: "", order: 0, entityStatus: "loading"}
     ],
     tasks: {
         ["todolistId1"]: [
@@ -52,7 +53,7 @@ const initialGlobalState: AppRootStateType = {
             {
                 id: v1(),
                 title: "Milk",
-                status: TaskStatuses.New,
+                status: TaskStatuses.Completed,
                 todoListId: "todolistId2",
                 priority: TaskPriorities.Middle,
                 description: "",
@@ -78,7 +79,7 @@ const initialGlobalState: AppRootStateType = {
     app: {status: "idle", error: "some error"}
 };
 
-export const storyBookStore = createStore(rootReducer, initialGlobalState);
+export const storyBookStore = createStore(rootReducer, initialGlobalState, applyMiddleware(thunk));
 //передаем в Provider не глобальный store(store.ts), а storyBookStore
 export const ReduxStoreProviderDecorator = (storyFn: any) => (
     <Provider

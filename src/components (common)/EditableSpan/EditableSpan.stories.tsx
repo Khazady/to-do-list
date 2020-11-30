@@ -16,3 +16,9 @@ export const BaseExample = () => {
         <EditableSpan title={"Start value"} onChange={changeCallback}/>
     )
 }
+
+export const DisabledExample = () => {
+    return (
+        <EditableSpan title={"Start value"} onChange={changeCallback} disabled/>
+    )
+}

@@ -2,7 +2,8 @@ import {AddTodoListActionType, RemoveTodoListActionType, SetTodolistActionType} 
 import {TaskPriorities, tasksAPI, TaskStatuses, TaskType, UpdateTaskModelType} from "../../api/api";
 import {Dispatch} from "redux";
 import {AppRootStateType} from "../../app/store";
-import {SetAppStatusActionType, setAppErrorAC, setAppStatusAC, SetAppErrorActionType} from "../../app/app-reducer";
+import {SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from "../../app/app-reducer";
+import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
 
 // reducer
 const initState: TasksStateType = {}
@@ -106,11 +107,15 @@ export const deleteTaskTC = (todolistId: string, taskId: string) =>
       tasksAPI.deleteTask(todolistId, taskId)
         //только потом диспатчим изменение в наш state
         .then(res => {
-              const action = removeTaskAC(todolistId, taskId)
-              dispatch(action)
-              dispatch(setAppStatusAC('succeeded'))
+              if (res.resultCode === 0) {
+                  const action = removeTaskAC(todolistId, taskId)
+                  dispatch(action)
+                  dispatch(setAppStatusAC('succeeded'))
+              } else {
+                  handleServerAppError(res, dispatch)
+              }
           }
-        )
+        ).catch((error) => handleServerNetworkError(error, dispatch))
   }
 export const addTaskTC = (todolistId: string, title: string) =>
   //возвращаем санку ( анонимная функция(название не имеет смысла))
@@ -124,14 +129,9 @@ export const addTaskTC = (todolistId: string, title: string) =>
                 //preloader cancel
                 dispatch(setAppStatusAC('succeeded'))
             } else {
-                if (res.messages.length) {
-                    dispatch(setAppErrorAC(res.messages[0]))
-                } else {
-                    dispatch(setAppErrorAC('Some error occurred'))
-                }
-                dispatch(setAppStatusAC('failed'))
+                handleServerAppError(res, dispatch)
             }
-        })
+        }).catch(error => handleServerNetworkError(error, dispatch))
   }
 export const updateTaskTC = (todolistId: string, taskId: string, businessModel: UpdateBusinessTaskModelType) =>
   //возвращаем санку ( анонимная функция(название не имеет смысла))
@@ -161,10 +161,14 @@ export const updateTaskTC = (todolistId: string, taskId: string, businessModel: 
       }
       tasksAPI.updateTask(todolistId, taskId, serverModal)
         .then(res => {
-            dispatch(updateTaskAC(todolistId, taskId, businessModel))
-            //preloader cancel
-            dispatch(setAppStatusAC('succeeded'))
-        })
+            if (res.resultCode === 0) {
+                dispatch(updateTaskAC(todolistId, taskId, businessModel))
+                //preloader cancel
+                dispatch(setAppStatusAC('succeeded'))
+            } else {
+                handleServerAppError(res, dispatch)
+            }
+        }).catch(error => handleServerNetworkError(error, dispatch))
   }
 
 

@@ -9,3 +9,10 @@
 .is-done {
   opacity: 0.5;
 }
+
+/* чтобы не прыгало от крутилки приложение */
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  position: absolute;
+}

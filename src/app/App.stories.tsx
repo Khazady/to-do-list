@@ -9,9 +9,9 @@ export default {
     decorators: [ReduxStoreProviderDecorator]
 };
 
-//AddItemForm в пропсах ждёт колбек, поэтому передаем туда action (фейковый коллбек)
+//no server interactions in demo
 export const BaseExample = () => {
     return (
-        <App/>
+        <App demo/>
     )
 }
