@@ -85,6 +85,6 @@ const initialGlobalState: AppRootStateType = {
 export const storyBookStore = createStore(rootReducer, initialGlobalState, applyMiddleware(thunk));
 //передаем в Provider не глобальный store(store.ts), а storyBookStore
 export const ReduxStoreProviderDecorator = (storyFn: any) => (
-    <Provider
-        store={storyBookStore}>{storyFn()}
-    </Provider>)
+  <Provider store={storyBookStore}>
+      {storyFn()}
+  </Provider>)

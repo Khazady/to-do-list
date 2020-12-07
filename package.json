@@ -1,6 +1,6 @@
 {
   "name": "it-incubator-todolist-ts",
-  "homepage": "https://github.com/Khazady/to-do-list",
+  "homepage": "https://khazady.github.io/to-do-list/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
