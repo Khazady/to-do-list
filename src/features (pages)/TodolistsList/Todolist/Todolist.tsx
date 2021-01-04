@@ -58,8 +58,8 @@ export const Todolist = React.memo( ( {demo = false, ...props}: TodoListPropsTyp
         dispatch(thunk)
     }, [dispatch, props.todolist.id]);
     //предполагаем, что в Button от MatUI внутри тоже есть React.memo, поэтому оборачиваем передаваемых в них коллбэк в useCallback
-    const changeFilter = useCallback((id: string, value: FilterValuesType) =>
-      dispatch(changeTodoListFilterAC(props.todolist.id, value)), [dispatch, props.todolist.id]);
+    const changeFilter = useCallback((id: string, filter: FilterValuesType) =>
+      dispatch(changeTodoListFilterAC({todolistId: props.todolist.id, filter})), [dispatch, props.todolist.id]);
 
 
     useEffect(() => {

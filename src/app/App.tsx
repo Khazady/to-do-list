@@ -44,7 +44,7 @@ function App({demo = false}: PropsType) {
                       <Menu open={false}/>
                   </IconButton>
                   <Typography variant="h6">
-                      News
+                      Hi there, this is my To-do-list
                   </Typography>
                   {isLoggedIn && <Button color="inherit" onClick={logoutHandler}>Log out</Button>}
               </Toolbar>

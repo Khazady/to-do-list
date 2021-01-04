@@ -7,7 +7,7 @@ beforeEach(() => {
 
 test('status should be changed to succeeded', () => {
 
-    const action = setAppStatusAC('succeeded');
+    const action = setAppStatusAC({status: 'succeeded'});
 
     const endState = appReducer(startState, action)
 
@@ -16,7 +16,7 @@ test('status should be changed to succeeded', () => {
 
 test('error message should be changed', () => {
 
-    const action = setAppErrorAC('Some error occurred');
+    const action = setAppErrorAC({error: 'Some error occurred'});
 
     const endState = appReducer(startState, action)
 
@@ -24,7 +24,7 @@ test('error message should be changed', () => {
 });
 test('app should be initialized', () => {
 
-    const action = setAppInitializedAC(true);
+    const action = setAppInitializedAC({isInitialized: true});
 
     const endState = appReducer(startState, action)
 

@@ -1,9 +1,10 @@
-import {applyMiddleware, combineReducers, createStore} from "redux";
-import {todolistsReducer} from "../features (pages)/TodolistsList/todolists-reducer";
-import {tasksReducer} from "../features (pages)/TodolistsList/tasks-reducer";
-import thunk from "redux-thunk";
-import {appReducer} from "./app-reducer";
-import {authReducer} from "../features (pages)/Login/auth-reducer";
+import {combineReducers} from 'redux'
+import {todolistsReducer} from '../features (pages)/TodolistsList/todolists-reducer'
+import {tasksReducer} from '../features (pages)/TodolistsList/tasks-reducer'
+import thunkMiddleware from 'redux-thunk'
+import {appReducer} from './app-reducer'
+import {authReducer} from '../features (pages)/Login/auth-reducer'
+import {configureStore} from '@reduxjs/toolkit'
 
 const rootReducer = combineReducers({
     todolists: todolistsReducer,
@@ -13,15 +14,18 @@ const rootReducer = combineReducers({
     auth: authReducer
 })
 
-//создаем стор, дополняя его своим стейтом и подключаем Middleware из thunk
-export const store = createStore(rootReducer, applyMiddleware(thunk))
+//export const store = createStore(rootReducer, applyMiddleware(thunk))
 
-//автоматическая типизация
+//redux-toolkit store
+export const store = configureStore({
+    reducer: rootReducer,
+    //adding to default middlewares thunk mw
+    middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(thunkMiddleware)
+})
+
 export type AppRootStateType = ReturnType<typeof rootReducer>
 
 
-
-
-// а это, чтобы можно было в консоли браузера обращаться к store в любой момент
+//for dev
 // @ts-ignore
-window.store = store;
+window.store = store
