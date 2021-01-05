@@ -1,11 +1,4 @@
-import {
-    addTaskAC,
-    removeTaskAC,
-    setTasksAC,
-    tasksReducer,
-    TasksStateType,
-    updateTaskAC
-} from './tasks-reducer'
+import {addTaskAC, removeTaskAC, setTasksAC, tasksReducer, TasksStateType, updateTaskAC} from './tasks-reducer'
 import {addTodolistAC, removeTodolistAC, setTodolistsAC} from './todolists-reducer'
 import {TaskPriorities, TaskStatuses} from '../../api/api'
 
@@ -88,8 +81,8 @@ test('correct task should be deleted from correct array', () => {
 
     expect(endState['todolistId1'].length).toBe(3)
     expect(endState['todolistId2'].length).toBe(2)
-    expect(endState['todolistId2'].every(t => t.id !== '2')).toBeTruthy()
-    //every каждый эл-нт массива соответствует предикату (условию) а
+    expect(endState['todolistId2'].every(t => t.id != '2')).toBeTruthy()
+    //every каждый эл-нт массива соответствует предикату (условию)
 })
 
 test('correct task should be added to correct array', () => {
@@ -182,10 +175,12 @@ test('property with todolistId should be deleted', () => {
 })
 
 test('empty arrays should be added when we set todolists', () => {
-    const action = setTodolistsAC({todolists: [
-        {id: '1', title: 'title1', order: 0, addedDate: ''},
-        {id: '2', title: 'title2', order: 0, addedDate: ''}
-    ]})
+    const action = setTodolistsAC({
+        todolists: [
+            {id: '1', title: 'title1', order: 0, addedDate: ''},
+            {id: '2', title: 'title2', order: 0, addedDate: ''}
+        ]
+    })
     //должны создаться пустые массивы под таски
     const endState = tasksReducer({}, action)
     //массив из ключей

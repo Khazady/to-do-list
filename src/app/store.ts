@@ -14,6 +14,7 @@ const rootReducer = combineReducers({
     auth: authReducer
 })
 
+
 //export const store = createStore(rootReducer, applyMiddleware(thunk))
 
 //redux-toolkit store
@@ -23,7 +24,8 @@ export const store = configureStore({
     middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(thunkMiddleware)
 })
 
-export type AppRootStateType = ReturnType<typeof rootReducer>
+export type RootReducerType = typeof rootReducer
+export type AppRootStateType = ReturnType<RootReducerType>
 
 
 //for dev

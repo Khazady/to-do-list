@@ -15,17 +15,12 @@ const slice = createSlice({
     reducers: {
         removeTaskAC(state, action: PayloadAction<{ todolistId: string, taskId: string }>) {
             //находим нужный массив тасок по айди
-            /*const tasks = state[action.payload.todolistId]
-            const index = tasks.findIndex(t => t.id !== action.payload.taskId)
+            const tasks = state[action.payload.todolistId]
+            const index = tasks.findIndex(t => t.id === action.payload.taskId)
             //проверка нашелся ли на всякий случай
-            if(index > -1) {
+            if (index > -1) {
                 //удаляем 1 элемент начиная с нужного индекса
                 tasks.splice(index, 1)
-            }*/
-            return {
-                ...state,
-                //в нужном листе (из action id) фильтруем все таски, кроме той, что пришла в action
-                [action.payload.todolistId]: state[action.payload.todolistId].filter(t => t.id === action.payload.taskId)
             }
         },
         addTaskAC(state, action: PayloadAction<{ task: TaskType }>) {
@@ -36,7 +31,7 @@ const slice = createSlice({
             const tasks = state[action.payload.todolistId]
             const index = tasks.findIndex(t => t.id === action.payload.taskId)
             //проверка нашелся ли на всякий случай
-            if(index > -1) {
+            if (index > -1) {
                 //меняем таску на копию с измененной моделькой из action (в ней сидит одно из свойств, кот. изм.)
                 tasks[index] = {...tasks[index], ...action.payload.model}
             }
