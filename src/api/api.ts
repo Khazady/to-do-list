@@ -69,10 +69,13 @@ export type TodolistServerType = {
 }
 //item это переменная, которую вставляем в generic при использовании (например <ResponseType<{item: TodolistType}>> ) --
 //-- значит, что в data будет item, в других случаях data - пустой объект ( <ResponseType<{}>> )
+
+export type FieldErrorType = { field: string, error: string }
 //в generic можно передать дефолт значение, если не писать уточняющий generic, то Item = {}
 export type ResponseType<Item = {}> = {
-    resultCode: number,
+    resultCode: number
     messages: Array<string>
+    fieldsErrors?: Array<FieldErrorType>
     data: Item
 }
 type GetTaskResponse<Item = {}> = {

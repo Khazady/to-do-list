@@ -1,20 +1,38 @@
-import {Dispatch} from 'redux'
 import {authAPI} from '../api/api'
 import {handleServerAppError, handleServerNetworkError} from '../utils/error-utils'
 import {setIsLoggedInAC} from '../features (pages)/Login/auth-reducer'
-import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 
-const initialState: InitialStateType = {
-    // происходит ли сейчас взаимодействие с сервером
-    status: 'idle',
-    error: null,
-    //проверили юзера, получили настройки
-    isInitialized: false
-}
+
+// thunks
+//при монтировании апп запрашиваем залогинен ли пользователь
+export const initializeAppTC = createAsyncThunk('app/initializeApp', async (arg, {dispatch}) => {
+    //достали только dispatch из всего thunkAPI
+    const data = await authAPI.me()
+    try {
+        if (data.resultCode === 0) {
+            dispatch(setIsLoggedInAC({isLoggedIn: true}))
+        } else {
+            handleServerAppError(data, dispatch)
+        }
+        //после получения ответа инициализируем приложение
+        // dispatch(setAppInitializedAC({isInitialized: true}))
+    } catch (error) {
+        handleServerNetworkError(error, dispatch)
+        //после получения ответа инициализируем приложение
+        // dispatch(setAppInitializedAC({isInitialized: true}))
+    }
+})
 
 const slice = createSlice({
     name: 'app',
-    initialState: initialState,
+    initialState: {
+        // происходит ли сейчас взаимодействие с сервером
+        status: 'idle',
+        error: null,
+        //проверили юзера, получили настройки
+        isInitialized: false
+    } as InitialStateType,
     reducers: {
         setAppStatusAC(state, action: PayloadAction<{ status: RequestStatusType }>) {
             state.status = action.payload.status
@@ -22,34 +40,19 @@ const slice = createSlice({
         setAppErrorAC(state, action: PayloadAction<{ error: string | null }>) {
             state.error = action.payload.error
         },
-        setAppInitializedAC(state, action: PayloadAction<{ isInitialized: boolean }>) {
-            state.isInitialized = action.payload.isInitialized
-        }
+    },
+    extraReducers: builder => {
+        builder.addCase(initializeAppTC.fulfilled, (state) => {
+            state.isInitialized = true
+        })
     }
 })
 
-export const appReducer = slice.reducer
-//actions
-//поищи ACs в slice.actions
-export const {setAppStatusAC, setAppErrorAC, setAppInitializedAC} = slice.actions
 
-// thunks
-//при монтировании апп запрашиваем залогинен ли пользователь
-export const initializeAppTC = () => (dispatch: Dispatch) => {
-    authAPI.me().then(res => {
-        if (res.resultCode === 0) {
-            dispatch(setIsLoggedInAC({isLoggedIn: true}))
-        } else {
-            handleServerAppError(res, dispatch)
-        }
-        //после получения ответа инициализируем приложение
-        dispatch(setAppInitializedAC({isInitialized: true}))
-    }).catch(error => {
-        handleServerNetworkError(error, dispatch)
-        //после получения ответа инициализируем приложение
-        dispatch(setAppInitializedAC({isInitialized: true}))
-    })
-}
+//exports from slice
+export const appReducer = slice.reducer
+export const {setAppStatusAC, setAppErrorAC} = slice.actions
+
 
 // types
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
@@ -61,4 +64,3 @@ export type InitialStateType = {
 
 export type SetAppStatusActionType = ReturnType<typeof setAppStatusAC>
 export type SetAppErrorActionType = ReturnType<typeof setAppErrorAC>
-export type SetAppInitializedActionType = ReturnType<typeof setAppInitializedAC>

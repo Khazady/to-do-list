@@ -1,18 +1,16 @@
-import {addTodolistAC, TodolistBusinessType, todolistsReducer} from './todolists-reducer'
+import {addTodolistTC, TodolistBusinessType, todolistsReducer} from './todolists-reducer'
 import {tasksReducer, TasksStateType} from './tasks-reducer'
 
 test('ids should be equals', () => {
     const startTasksState: TasksStateType = {}
     const startTodolistsState: Array<TodolistBusinessType> = []
-
-    const action = addTodolistAC({
-        todolist: {
-            id: 'blabla',
-            title: 'new todolist',
-            addedDate: '',
-            order: 0
-        }
-    })
+    let todolist = {
+        id: 'blabla',
+        title: 'new todolist',
+        addedDate: '',
+        order: 0
+    }
+    const action = addTodolistTC.fulfilled({todolist}, 'requestedId', todolist.title)
 
     const endTasksState = tasksReducer(startTasksState, action)
     const endTodolistsState = todolistsReducer(startTodolistsState, action)

@@ -1,6 +1,6 @@
-import {authReducer, initialState, setIsLoggedInAC} from "./auth-reducer";
+import {authReducer, setIsLoggedInAC} from './auth-reducer'
 
-let startState: typeof initialState;
+let startState: {isLoggedIn: boolean}
 
 beforeEach(() => {
     startState = { isLoggedIn: false }})

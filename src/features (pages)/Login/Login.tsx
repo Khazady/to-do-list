@@ -1,9 +1,9 @@
 import React from 'react'
-import {Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, TextField, Button, Grid} from '@material-ui/core'
-import {useFormik} from 'formik'
+import {Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField} from '@material-ui/core'
+import {FormikHelpers, useFormik} from 'formik'
 import {useDispatch, useSelector} from 'react-redux'
 import {loginTC} from './auth-reducer'
-import {AppRootStateType} from '../../app/store'
+import {RootStateType, DispatchType} from '../../app/store'
 import {Redirect} from 'react-router-dom'
 
 type FormikErrorType = {
@@ -11,9 +11,14 @@ type FormikErrorType = {
     password?: string
     rememberMe?: boolean
 }
+type FormValuesType = {
+    email: string,
+    password: string,
+    rememberMe: boolean
+}
 
 export const Login = () => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<DispatchType>()
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -39,12 +44,19 @@ export const Login = () => {
         },
         //в теге form - handleSubmit ссылка на этот коллбек, он принимает в себя значения из полей
         //в виде объекта {имя поля: введенное значение,...}
-        onSubmit: values => {
-            dispatch(loginTC(values))
+        onSubmit: async (values: FormValuesType, formikHelpers: FormikHelpers<FormValuesType>) => {
+            const action = await dispatch(loginTC(values))
+            debugger
+            if (loginTC.rejected.match(action)) {
+                if (action.payload?.fieldsErrors?.length) {
+                    const error = action.payload.fieldsErrors[0]
+                    formikHelpers.setFieldError(error.field, error.error)
+                }
+            }
         }
     })
     //если залогинен и находишься на странице логина, то редирект на главную страницу
-    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
+    const isLoggedIn = useSelector<RootStateType, boolean>(state => state.auth.isLoggedIn)
     if (isLoggedIn) {
         return <Redirect to={'/'}/>
     }

@@ -2,7 +2,7 @@ import React, {useCallback, useEffect} from 'react'
 import {Button, ButtonGroup, IconButton} from "@material-ui/core";
 import {Delete, Home} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../../../app/store";
+import {RootStateType} from "../../../app/store";
 import {addTaskTC, fetchTasksTC} from "../tasks-reducer";
 import {
     changeTodoListFilterAC,
@@ -31,7 +31,7 @@ export const Todolist = React.memo( ( {demo = false, ...props}: TodoListPropsTyp
 
     //первый дженерик тип глобал стейта, второй того, что мы селектим
     //вместо mapStateToProps, храним здесь стейт, нужный для этой компоненты
-    const allTodoListTasks = useSelector<AppRootStateType, Array<TaskType>>(state => state.tasks[props.todolist.id])
+    const allTodoListTasks = useSelector<RootStateType, Array<TaskType>>(state => state.tasks[props.todolist.id])
 
     //в неё кладем отсортированные таски (создаем тут, чтобы не создавать в каждом case)
     //let потому что делаем ниже присваивания
@@ -51,10 +51,10 @@ export const Todolist = React.memo( ( {demo = false, ...props}: TodoListPropsTyp
     //запоминает функцию и т.к. пустой [], то никогда не создавай новую функцию
     //disp и AC не меняется и можно его не добавлять
     //обязательно вставляем всё, от чего зависит функция извне (props.id)
-    const addTask = useCallback((title: string) => dispatch(addTaskTC(props.todolist.id, title)), [dispatch, props.todolist.id]);
+    const addTask = useCallback((title: string) => dispatch(addTaskTC({todolistId: props.todolist.id, title})), [dispatch, props.todolist.id]);
     const removeTodoList = useCallback(() => dispatch(removeTodolistTC(props.todolist.id)), [dispatch, props.todolist.id]);
     const changeTodoListTitle = useCallback((newTitle: string) => {
-        const thunk = changeTodolistTitleTC(props.todolist.id, newTitle);
+        const thunk = changeTodolistTitleTC({todolistId: props.todolist.id, title: newTitle});
         dispatch(thunk)
     }, [dispatch, props.todolist.id]);
     //предполагаем, что в Button от MatUI внутри тоже есть React.memo, поэтому оборачиваем передаваемых в них коллбэк в useCallback

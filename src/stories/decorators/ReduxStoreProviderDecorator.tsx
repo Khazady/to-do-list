@@ -4,13 +4,13 @@ import {combineReducers} from 'redux'
 import {v1} from 'uuid'
 import {tasksReducer} from '../../features (pages)/TodolistsList/tasks-reducer'
 import {todolistsReducer} from '../../features (pages)/TodolistsList/todolists-reducer'
-import {AppRootStateType, RootReducerType} from '../../app/store'
+import {RootStateType, RootReducerType} from '../../app/store'
 import {TaskPriorities, TaskStatuses} from '../../api/api'
 import {appReducer} from '../../app/app-reducer'
 import thunkMiddleware from 'redux-thunk'
 import {authReducer} from '../../features (pages)/Login/auth-reducer'
 import {configureStore} from '@reduxjs/toolkit'
-import {BrowserRouter, HashRouter} from 'react-router-dom'
+import {HashRouter} from 'react-router-dom'
 
 //decorator это как HOC, оборачивает сторисы, в данном случае в провайдер
 
@@ -21,7 +21,7 @@ const rootReducer: RootReducerType = combineReducers({
     auth: authReducer
 })
 
-const initialGlobalState: AppRootStateType = {
+const initialGlobalState: RootStateType = {
     todolists: [
         {id: 'todolistId1', title: 'What to learn', filter: 'all', addedDate: '', order: 0, entityStatus: 'idle'},
         {id: 'todolistId2', title: 'What to buy', filter: 'all', addedDate: '', order: 0, entityStatus: 'loading'}

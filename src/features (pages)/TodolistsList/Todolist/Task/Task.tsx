@@ -18,18 +18,18 @@ export const Task = React.memo((props: TaskPropsType) => {
     const dispatch = useDispatch();
 
     const RemoveTask = useCallback(() => {
-        dispatch(deleteTaskTC(props.todolistId, props.task.id))
+        dispatch(deleteTaskTC({todolistId: props.todolistId, taskId: props.task.id}))
         },
         //массив зависимостей (все, что используем извне)
         [dispatch, props.task.id, props.todolistId]);
     const ChangeTaskStatus = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         let newStatusValue = e.currentTarget.checked;
         //отправляем в модельке только нужное для изменения свойство
-        dispatch(updateTaskTC(props.todolistId, props.task.id, {status: newStatusValue ? TaskStatuses.Completed : TaskStatuses.New}));
+        dispatch(updateTaskTC({todolistId: props.todolistId, taskId: props.task.id, model: {status: newStatusValue ? TaskStatuses.Completed : TaskStatuses.New}}));
     }, [dispatch, props.task.id, props.todolistId]);
     const ChangeTaskTitle = useCallback((newValue: string) =>
             //отправляем в модельке только нужное для изменения свойство
-            dispatch(updateTaskTC(props.todolistId, props.task.id, {title: newValue},)),
+            dispatch(updateTaskTC({todolistId: props.todolistId, taskId: props.task.id, model: {title: newValue}})),
         [dispatch, props.task.id, props.todolistId]);
 
     return (

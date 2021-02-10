@@ -1,4 +1,4 @@
-import {appReducer, InitialStateType, setAppErrorAC, setAppInitializedAC, setAppStatusAC} from "./app-reducer";
+import {appReducer, initializeAppTC, InitialStateType, setAppErrorAC, setAppStatusAC} from './app-reducer'
 
 let startState: InitialStateType;
 
@@ -24,7 +24,7 @@ test('error message should be changed', () => {
 });
 test('app should be initialized', () => {
 
-    const action = setAppInitializedAC({isInitialized: true});
+    const action = initializeAppTC.fulfilled({isInitialized: true}, 'requestedId');
 
     const endState = appReducer(startState, action)
 
