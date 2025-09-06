@@ -13,10 +13,10 @@ export const BaseExample = () => {
     )
 }
 
-//action это консоль в StoryBook
+// action is the StoryBook console
 const callback = action("Button inside form was clicked");
 
-//AddItemForm в пропсах ждёт колбек, поэтому передаем туда action (фейковый коллбек)
+// AddItemForm expects a callback in props, so we pass action (a fake callback)
 export const WithActionExample = () => {
     return (
         <AddItemForm addItem={callback}/>

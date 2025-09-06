@@ -10,11 +10,11 @@ export default {
     decorators: [ReduxStoreProviderDecorator]
 };
 
-//action это консоль в StoryBook
+// action is the StoryBook console
 const callback = action("Button inside form was clicked");
 
-//AddItemForm в пропсах ждёт колбек, поэтому передаем туда action (фейковый коллбек)
-//я сделал компоненты неконтролируемыми, поэтому здесь нету коллбэков (возможно надо исправить)
+// AddItemForm expects a callback in props, so we pass action (a fake callback)
+// I made the components uncontrolled, so there are no callbacks here (might need to fix)
 export const BaseExample = () => {
     return (
       <>

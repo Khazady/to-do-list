@@ -1,14 +1,14 @@
-//describe - "папка с тестами", а it - 1 тест
+// describe is "folder with tests" and it is a single test
 describe('Task', () => {
     it('base example, visually looks correct', async () => {
-        //стандартного таймаута jest'а в 5000 не хватает чтобы сделать скрин??7
+        // standard Jest timeout of 5000 isn't enough to take screenshot??
         jest.setTimeout(30000);
         await page.goto('http://localhost:9009/iframe.html?id=task-stories--base-example&viewMode=story');
-        //делаем скриншот по урлу с вставленным iframe.html
-        //1-ый скрин эталонный
+        // take screenshot from URL with embedded iframe.html
+        // first screenshot is reference
         const image = await page.screenshot();
 
-        //сравниваем прошлый скриншот с новым
+        // compare previous screenshot with new one
         expect(image).toMatchImageSnapshot();
     });
 });

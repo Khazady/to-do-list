@@ -4,7 +4,7 @@ import {ResponseType} from '../api/api'
 
 // generic function
 export const handleServerAppError = <T>(data: ResponseType<T>, dispatch: ErrorUtilsDispatchType) => {
-    //если длина существуетч(псевдоистина)
+    // if length exists (truthy)
     if (data.messages.length) {
         dispatch(setAppErrorAC({error: data.messages[0]}))
     } else {
@@ -12,8 +12,8 @@ export const handleServerAppError = <T>(data: ResponseType<T>, dispatch: ErrorUt
     }
     dispatch(setAppStatusAC({status: 'failed'}))
 }
-//ловим ошибку(код ответа (напр 401) или нет инета(failed)) и диспатчим статус крутилки и сообщение ошибки в алерт
-//прописываем это в .catch, т.к. в случае такой ошибки мы не попадаем в .then
+// catch error (response code e.g. 401 or no internet (failed)) and dispatch spinner status and error message to alert
+// write this in .catch because in case of such error we won't enter .then
 export const handleServerNetworkError = (error: { message: string }, dispatch: ErrorUtilsDispatchType) => {
     dispatch(setAppErrorAC(error.message ? {error: error.message} : {error: 'Some error occurred'}))
     dispatch(setAppStatusAC({status: 'failed'}))

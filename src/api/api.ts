@@ -1,4 +1,4 @@
-//DAL крайняя точка клиента перед сервером, поэтому здесь не может быть других импортов кроме axios
+// DAL is the client's last stop before the server, so there can't be other imports besides axios
 import axios from "axios";
 
 const instance = axios.create({
@@ -13,8 +13,8 @@ const instance = axios.create({
 //api
 export const todolistsAPI = {
     getTodolists() {
-        //оставляем в ответе только дату
-        //generic того, что нам возвращает этот метод (в документации)
+        // return only the data portion of the response
+        // generic of what this method returns (as per docs)
         return instance.get<Array<TodolistServerType>>("todo-lists").then(res => res.data)
     },
     createTodolist(title: string) {
@@ -29,9 +29,9 @@ export const todolistsAPI = {
 }
 export const tasksAPI = {
     getTasks(todolistId: string) {
-        //получаем порцию тасок конкретного todolist
-        //generic того, что нам возвращает этот метод (в документации)
-        //в Item будет массив объектов {items:TaskType}
+        // get a portion of tasks of a specific todolist
+        // generic of what this method returns (as per docs)
+        // Item will be an array of objects {items: TaskType}
         return instance.get<GetTaskResponse<Array<TaskType>>>(`todo-lists/${todolistId}/tasks`).then(res => res.data)
     },
     createTask(todolistId: string, title: string) {
@@ -46,7 +46,7 @@ export const tasksAPI = {
 }
 export const authAPI = {
     login(loginData: LoginParamsType) {
-        //возвращает promise
+        // returns a promise
         return instance.post<ResponseType<{userId?: number}>>(`auth/login`, loginData).then(res => res.data)
     },
     me() {
@@ -60,18 +60,18 @@ export const authAPI = {
 
 // types
 
-//с API начинается разработка приложения, поэтому типы того, что приходит с сервера описываем в API
+// application development starts with API, so we describe the types of data coming from server here
 export type TodolistServerType = {
     id: string
     title: string
     addedDate: string
     order: number
 }
-//item это переменная, которую вставляем в generic при использовании (например <ResponseType<{item: TodolistType}>> ) --
-//-- значит, что в data будет item, в других случаях data - пустой объект ( <ResponseType<{}>> )
+// item is the variable we insert into generic when used (e.g. <ResponseType<{item: TodolistType}>> ) --
+// -- means data will contain item; otherwise data is an empty object ( <ResponseType<{}>> )
 
 export type FieldErrorType = { field: string, error: string }
-//в generic можно передать дефолт значение, если не писать уточняющий generic, то Item = {}
+// generic can have default value; if no specific generic is provided, Item = {}
 export type ResponseType<Item = {}> = {
     resultCode: number
     messages: Array<string>
@@ -83,7 +83,7 @@ type GetTaskResponse<Item = {}> = {
     totalCount: number
     items: Item
 }
-//особый тип/переменная, расширяющий boolean, так как false и true не хватает для статусов (запросов)
+// special type/variable extending boolean, because false and true are not enough for request statuses
 export enum TaskStatuses {
     New = 0,
     InProgress = 1,

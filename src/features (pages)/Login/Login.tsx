@@ -25,16 +25,16 @@ export const Login = () => {
             password: '',
             rememberMe: false
         },
-        //вызывает проверку на каждом печатаемом символе
+        // triggers validation on each typed character
         validate: values => {
             const errors: FormikErrorType = {}
-            //ошибки поля email
+            // errors for email field
             if (!values.email) {
                 errors.email = 'Email is required'
             } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
                 errors.email = 'Invalid email address'
             }
-            //ошибки поля password
+            // errors for password field
             if (!values.password) {
                 errors.password = 'Password is required'
             } else if (values.password.length < 4) {
@@ -42,8 +42,8 @@ export const Login = () => {
             }
             return errors
         },
-        //в теге form - handleSubmit ссылка на этот коллбек, он принимает в себя значения из полей
-        //в виде объекта {имя поля: введенное значение,...}
+        // form tag's handleSubmit references this callback; it receives field values
+        // as an object {fieldName: entered value, ...}
         onSubmit: async (values: FormValuesType, formikHelpers: FormikHelpers<FormValuesType>) => {
             const action = await dispatch(loginTC(values))
             debugger
@@ -55,7 +55,7 @@ export const Login = () => {
             }
         }
     })
-    //если залогинен и находишься на странице логина, то редирект на главную страницу
+    // if logged in and on login page, redirect to main page
     const isLoggedIn = useSelector<RootStateType, boolean>(state => state.auth.isLoggedIn)
     if (isLoggedIn) {
         return <Redirect to={'/'}/>

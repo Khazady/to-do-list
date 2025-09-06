@@ -8,14 +8,14 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 
 //thunks
 export const deleteTaskTC = createAsyncThunk('tasks/deleteTask', async (arg: { todolistId: string, taskId: string }, thunkAPI) => {
-    //preloader ставим перед запросом на серв
+    // show preloader before server request
     thunkAPI.dispatch(setAppStatusAC({status: 'loading'}))
     const data = await tasksAPI.deleteTask(arg.todolistId, arg.taskId)
     try {
-        //только потом диспатчим изменение в наш state
+        // only then dispatch change to our state
         if (data.resultCode === 0) {
             thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}))
-            //возвращаем промис(т.к. async func), кот. резолвится нужным объектом
+            // return a promise (since async func) resolving with needed object
             return {todolistId: arg.todolistId, taskId: arg.taskId}
         } else {
             handleServerAppError(data, thunkAPI.dispatch)
@@ -36,14 +36,14 @@ export const fetchTasksTC = createAsyncThunk('tasks/fetchTask', async (todolistI
     return {tasks, todolistId}
 })
 export const addTaskTC = createAsyncThunk('tasks/addTask', async (arg: { todolistId: string, title: string }, {dispatch, rejectWithValue}) => {
-    //preloader
+    // preloader
     dispatch(setAppStatusAC({status: 'loading'}))
     const data = await tasksAPI.createTask(arg.todolistId, arg.title)
 
     try {
         if (data.resultCode === 0) {
             const task = data.data.item
-            //preloader cancel
+            // preloader cancel
             dispatch(setAppStatusAC({status: 'succeeded'}))
             return task
         } else {
@@ -52,43 +52,43 @@ export const addTaskTC = createAsyncThunk('tasks/addTask', async (arg: { todolis
         }
     } catch (error) {
         handleServerNetworkError(error, dispatch)
-        //ошибка нам не важна, нужно просто уведомить redux-toolkit
+        // error itself not important; just notify redux-toolkit
         return rejectWithValue(null)
     }
 })
 export const updateTaskTC = createAsyncThunk('tasks/updateTask', async (arg: { todolistId: string, taskId: string, model: UpdateBusinessTaskModelType },
                                                                         {dispatch, rejectWithValue, getState}) => {
-    //preloader
+    // preloader
     dispatch(setAppStatusAC({status: 'loading'}))
     const state = getState() as RootStateType
-    //ищем нужную таскую
+    // find desired task
     const task = state.tasks[arg.todolistId].find(t => t.id === arg.taskId)
-    //на случай, если произойдет внештатная ошибка
+    // in case an unexpected error occurs
     if (!task) {
         return rejectWithValue('task was not found in the state')
     }
-    //меняем только статус, остальное берем из getState
+    // change only the status; take rest from getState
     const serverModal: UpdateTaskModelType = {
-        //не делаем копию с помощью {...task, status: status} потому что в task находятся лишние данные
-        //не нужные серву (todoId, addedDate, id)
+        // don't copy using {...task, status} because task contains extra data
+        // unneeded by server (todoId, addedDate, id)
         deadline: task.deadline,
         description: task.description,
         priority: task.priority,
         startDate: task.startDate,
         status: task.status,
         title: task.title,
-        //тут будет 1 нужное для перезатирания свойство, оно перезапишет в serverModel
+        // here there will be a property to overwrite; it will replace in serverModel
         ...arg.model
     }
     const data = await tasksAPI.updateTask(arg.todolistId, arg.taskId, serverModal)
     try {
         if (data.resultCode === 0) {
-            //preloader cancel
+            // preloader cancel
             dispatch(setAppStatusAC({status: 'succeeded'}))
             return arg
         } else {
             handleServerAppError(data, dispatch)
-            //обабатываем ошибки своим способом, но для поддержания инфраструктуры redux-toolkit обязаны реджекать, иначе попадем в case fulfilled
+            // we handle errors our way but must reject to keep redux-toolkit infrastructure, otherwise it goes to fulfilled
             return rejectWithValue(null)
         }
     } catch (error) {
@@ -102,48 +102,48 @@ const slice = createSlice({
     name: 'tasks',
     initialState: {} as TasksStateType,
     reducers: {},
-    //кейсы, использовавшиеся в нескольких редьюсерах
-    //меняя листы, мы меняем и вторую часть стейта, отвечающуую за их таски
-    //syntax for auto typing
+    // cases used in multiple reducers
+    // when changing lists, also change second part of state responsible for their tasks
+    // syntax for auto typing
     extraReducers: (builder) => {
         builder.addCase(addTodolistTC.fulfilled, (state, action) => {
-            //добавляя новый лист, создаем пустой массив для его тасок
+            // adding new list, create empty array for its tasks
             state[action.payload.todolist.id] = []
         })
         builder.addCase(removeTodolistTC.fulfilled, (state, action) => {
             delete state[action.payload.todolistId]
         })
         builder.addCase(fetchTodolistsTC.fulfilled, (state, action) => {
-            //когда нам приходят листы с api, создаем для каждого пустой массив для их тасок
+            // when lists come from API, create empty array for each list's tasks
             action.payload.todolists.forEach(tl => state[tl.id] = [])
         })
-        //вместо явно созданного AC, берем его из TC (случай, когда санка зарезолвилась (fulfilled как в promise)
+        // instead of explicitly created AC, take it from TC (when thunk resolves, like promise fulfilled)
         builder.addCase(fetchTasksTC.fulfilled, (state, action) => {
-            //находим нужный лист в ассоц. массиве по id из action и пихаем в него таски из action
+            // find needed list in associative array by id and put tasks from action into it
             state[action.payload.todolistId] = action.payload.tasks
         })
         builder.addCase(deleteTaskTC.fulfilled, (state, action) => {
-            //находим нужный массив тасок по айди
+            // find required tasks array by id
             const tasks = state[action.payload.todolistId]
             const index = tasks.findIndex(t => {
                 return t.id === action.payload.taskId
             })
-            //проверка нашелся ли на всякий случай
+            // check found it just in case
             if (index > -1) {
-                //удаляем 1 элемент начиная с нужного индекса
+                // remove one element starting from needed index
                 tasks.splice(index, 1)
             }
         })
         builder.addCase(addTaskTC.fulfilled, (state, action) => {
-            //находим в ассоц. массиве по айди и добавляем в начала таску из экшена
+            // find by id in associative array and add task from action to the start
             state[action.payload.todoListId].unshift(action.payload)
         })
         builder.addCase(updateTaskTC.fulfilled, (state, action) => {
             const tasks = state[action.payload.todolistId]
             const index = tasks.findIndex(t => t.id === action.payload.taskId)
-            //проверка нашелся ли на всякий случай
+            // check found it just in case
             if (index > -1) {
-                //меняем таску на копию с измененной моделькой из action (в ней сидит одно из свойств, кот. изм.)
+                // replace task with a copy modified by action model (contains the property that changed)
                 tasks[index] = {...tasks[index], ...action.payload.model}
             }
         })
@@ -159,7 +159,7 @@ export const tasksReducer = slice.reducer
 export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
-//тип нужен, чтобы сделать 1 TC на несколько операций апдейта таски, чтобы не отправлять сразу всё
+// type needed to make one TC for several task update operations so we don't send everything at once
 export type UpdateBusinessTaskModelType = {
     title?: string
     description?: string

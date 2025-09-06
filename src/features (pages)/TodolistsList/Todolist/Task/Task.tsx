@@ -11,7 +11,7 @@ type TaskPropsType = {
     task: TaskType
     filter: FilterValuesType
     todolistId: string
-    //дизейблим одновременно в TL, можно иначе, но нет UX-инженера :)
+    // disable simultaneously in TL; could be otherwise but no UX engineer :)
     disabled?: boolean
 }
 export const Task = React.memo((props: TaskPropsType) => {
@@ -20,22 +20,22 @@ export const Task = React.memo((props: TaskPropsType) => {
     const RemoveTask = useCallback(() => {
         dispatch(deleteTaskTC({todolistId: props.todolistId, taskId: props.task.id}))
         },
-        //массив зависимостей (все, что используем извне)
+        // dependency array (all external values used)
         [dispatch, props.task.id, props.todolistId]);
     const ChangeTaskStatus = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         let newStatusValue = e.currentTarget.checked;
-        //отправляем в модельке только нужное для изменения свойство
+        // send only the property we need to change in the model
         dispatch(updateTaskTC({todolistId: props.todolistId, taskId: props.task.id, model: {status: newStatusValue ? TaskStatuses.Completed : TaskStatuses.New}}));
     }, [dispatch, props.task.id, props.todolistId]);
     const ChangeTaskTitle = useCallback((newValue: string) =>
-            //отправляем в модельке только нужное для изменения свойство
+            // send only the property we need to change in the model
             dispatch(updateTaskTC({todolistId: props.todolistId, taskId: props.task.id, model: {title: newValue}})),
         [dispatch, props.task.id, props.todolistId]);
 
     return (
         <li key={props.task.id}
             className={props.filter !== "completed" && props.task.status === TaskStatuses.Completed ? "is-done" : ""}>
-            {/*прозрачный класс добавится когда таска чекнута и не в фильтре комплитед*/}
+            {/* transparent class is added when task is checked and not in completed filter */}
             <Checkbox checked={props.task.status === TaskStatuses.Completed} onChange={ChangeTaskStatus}
                       color="primary" disabled={props.disabled}/>
             <EditableSpan title={props.task.title} onChange={ChangeTaskTitle} disabled={props.disabled}/>

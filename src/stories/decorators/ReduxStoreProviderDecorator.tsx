@@ -12,7 +12,7 @@ import {authReducer} from '../../features (pages)/Login/auth-reducer'
 import {configureStore} from '@reduxjs/toolkit'
 import {HashRouter} from 'react-router-dom'
 
-//decorator это как HOC, оборачивает сторисы, в данном случае в провайдер
+// decorator is like a HOC; it wraps stories, in this case with Provider
 
 const rootReducer: RootReducerType = combineReducers({
     tasks: tasksReducer,
@@ -89,7 +89,7 @@ export const storyBookStore = configureStore({
     preloadedState: initialGlobalState,
     middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(thunkMiddleware)
 })
-//передаем в Provider не глобальный store(store.ts), а storyBookStore
+// we pass storyBookStore to Provider instead of the global store (store.ts)
 export const ReduxStoreProviderDecorator = (storyFn: any) => (
   <Provider store={storyBookStore}>
       <HashRouter>

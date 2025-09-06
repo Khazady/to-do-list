@@ -5,9 +5,9 @@ import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 
 // thunks
-//при монтировании апп запрашиваем залогинен ли пользователь
+// when the app mounts, request whether the user is logged in
 export const initializeAppTC = createAsyncThunk('app/initializeApp', async (arg, {dispatch}) => {
-    //достали только dispatch из всего thunkAPI
+    // extracted only dispatch from the whole thunkAPI
     const data = await authAPI.me()
     try {
         if (data.resultCode === 0) {
@@ -15,11 +15,11 @@ export const initializeAppTC = createAsyncThunk('app/initializeApp', async (arg,
         } else {
             handleServerAppError(data, dispatch)
         }
-        //после получения ответа инициализируем приложение
+        // after getting the response, initialize the app
         // dispatch(setAppInitializedAC({isInitialized: true}))
     } catch (error) {
         handleServerNetworkError(error, dispatch)
-        //после получения ответа инициализируем приложение
+        // after getting the response, initialize the app
         // dispatch(setAppInitializedAC({isInitialized: true}))
     }
 })
@@ -27,10 +27,10 @@ export const initializeAppTC = createAsyncThunk('app/initializeApp', async (arg,
 const slice = createSlice({
     name: 'app',
     initialState: {
-        // происходит ли сейчас взаимодействие с сервером
+        // whether there is an ongoing interaction with the server
         status: 'idle',
         error: null,
-        //проверили юзера, получили настройки
+        // user checked, settings retrieved
         isInitialized: false
     } as InitialStateType,
     reducers: {

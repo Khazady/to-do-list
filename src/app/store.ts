@@ -9,7 +9,7 @@ import {configureStore} from '@reduxjs/toolkit'
 const rootReducer = combineReducers({
     todolists: todolistsReducer,
     tasks: tasksReducer,
-    //в ветке app всё что касается апп в общем(напр. светлая/темная тема, язык прилож., какой юзер сейчас авториз.)
+    // the app branch stores general app settings (e.g., light/dark theme, app language, currently authorized user)
     app: appReducer,
     auth: authReducer
 })
@@ -34,3 +34,4 @@ export type DispatchType = typeof store.dispatch
 //for dev
 // @ts-ignore
 window.store = store
+

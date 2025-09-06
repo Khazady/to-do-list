@@ -4,21 +4,21 @@ import {AddBox} from "@material-ui/icons";
 
 type AddItemFormPropsType = {
     addItem: (title: string) => void
-    //sometimes we need to disable Add button in some cases(удаляющийся TL)
+    // sometimes we need to disable Add button, e.g., when a TL is being deleted
     disabled?: boolean
 }
 
-//React.memo предотвращает перерисовку когда приходят такие же пропсы
-//но т.к. нам приходит каждый раз одинаковый(для человека) коллбэк, а func это obj, а одинаковые объекты не равны
-//все равно происходит перерисовка, поэтому useCallback в addTask
+// React.memo prevents re-render when same props arrive
+// but since we receive the same (for humans) callback every time and functions are objects that aren't equal
+// re-render still happens, so use useCallback in addTask
 export const AddItemForm = React.memo(function(props: AddItemFormPropsType) {
     console.log("AddItemForm rendered")
 
-    /*локальный стейт инпута, синхронизируем value инпута с отрисовкой по клику новой таски в title*/
+    /* local state of the input; synchronize input value with rendering when adding new task to title */
     let [title, setTitle] = useState<string>("");
     let [error, setError] = useState<string | null>(null)
 
-    /*пихает из локального стейта в функцию addTask в App* и удаляет пробелы */
+    /* pushes from local state into addTask function in App and trims spaces */
     const addItem = () => {
         if (title.trim() !== "") {
             props.addItem(title);
@@ -27,14 +27,14 @@ export const AddItemForm = React.memo(function(props: AddItemFormPropsType) {
             setError("Title is not required")
         }
     };
-    /*перерисовка инпута, засовываем в локал стейт впечатанное значение инпута и убираем ошибку, впечатывая*/
+    /* re-render input: put typed value into local state and clear error while typing */
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setTitle(e.currentTarget.value);
         setError(null);
     };
-    /*если нажат интер, то пихнуть в App*/
+    /* if Enter pressed, pass to App */
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        //чтобы setError не занулял ошибку при каждом нажатии клавиши
+        // so setError doesn't reset error on every key press
         if (error !== null) {
             setError(null)
         }
@@ -47,7 +47,7 @@ export const AddItemForm = React.memo(function(props: AddItemFormPropsType) {
                      onChange={onChangeHandler}
                      onKeyPress={onKeyPressHandler}
                      variant="outlined"
-            //Псевдоистина, тс блочит автомат. преобр. строки в булево, поэтому оператором делаем вручную
+            // pseudo truthiness; TS blocks automatic string-to-boolean conversion, so we do it manually with operator
                      error={!!error}
                      label={"Title"}
                      helperText={error}

@@ -29,12 +29,12 @@ export const Todolist = React.memo( ( {demo = false, ...props}: TodoListPropsTyp
     const dispatch = useDispatch()
 
 
-    //первый дженерик тип глобал стейта, второй того, что мы селектим
-    //вместо mapStateToProps, храним здесь стейт, нужный для этой компоненты
+    // first generic is the global state type, second is what we select
+    // instead of mapStateToProps, store here the state needed for this component
     const allTodoListTasks = useSelector<RootStateType, Array<TaskType>>(state => state.tasks[props.todolist.id])
 
-    //в неё кладем отсортированные таски (создаем тут, чтобы не создавать в каждом case)
-    //let потому что делаем ниже присваивания
+    // put sorted tasks here (create here so we don't create in every case)
+    // use let because we reassign later
     let tasksForTodoList: Array<TaskType>;
     switch (props.todolist.filter) {
         case "active" :
@@ -48,22 +48,22 @@ export const Todolist = React.memo( ( {demo = false, ...props}: TodoListPropsTyp
             break;
     }
 
-    //запоминает функцию и т.к. пустой [], то никогда не создавай новую функцию
-    //disp и AC не меняется и можно его не добавлять
-    //обязательно вставляем всё, от чего зависит функция извне (props.id)
+    // memoizes function; with empty [], it never creates new function
+    // dispatch and AC don't change and could be omitted
+    // must include all external dependencies (props.id)
     const addTask = useCallback((title: string) => dispatch(addTaskTC({todolistId: props.todolist.id, title})), [dispatch, props.todolist.id]);
     const removeTodoList = useCallback(() => dispatch(removeTodolistTC(props.todolist.id)), [dispatch, props.todolist.id]);
     const changeTodoListTitle = useCallback((newTitle: string) => {
         const thunk = changeTodolistTitleTC({todolistId: props.todolist.id, title: newTitle});
         dispatch(thunk)
     }, [dispatch, props.todolist.id]);
-    //предполагаем, что в Button от MatUI внутри тоже есть React.memo, поэтому оборачиваем передаваемых в них коллбэк в useCallback
+    // assuming MatUI Button internally uses React.memo, so wrap callbacks passed into it with useCallback
     const changeFilter = useCallback((id: string, filter: FilterValuesType) =>
       dispatch(changeTodoListFilterAC({todolistId: props.todolist.id, filter})), [dispatch, props.todolist.id]);
 
 
     useEffect(() => {
-        //убираем из storybook работу с сервером (после ретурна код не выполняется)
+        // remove server work from storybook (code after return doesn't execute)
         if(demo) return
         dispatch(fetchTasksTC(props.todolist.id))
     }, [dispatch, props.todolist.id])
