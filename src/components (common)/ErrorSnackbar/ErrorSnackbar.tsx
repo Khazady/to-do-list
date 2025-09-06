@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../app/store";
 import {setAppErrorAC} from "../../app/app-reducer";
 
-//всплывашка с ошибкой
+// error popup
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }

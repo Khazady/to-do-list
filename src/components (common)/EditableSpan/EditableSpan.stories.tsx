@@ -7,10 +7,10 @@ export default {
     component: EditableSpan,
 };
 
-//action это консоль в StoryBook
+// action is the StoryBook console
 const changeCallback = action("Value changed");
 
-//AddItemForm в пропсах ждёт колбек, поэтому передаем туда action (фейковый коллбек)
+// AddItemForm expects a callback in props, so we pass action (a fake callback)
 export const BaseExample = () => {
     return (
         <EditableSpan title={"Start value"} onChange={changeCallback}/>

@@ -83,7 +83,7 @@ test('correct task should be deleted from correct array', () => {
     expect(endState['todolistId1'].length).toBe(3)
     expect(endState['todolistId2'].length).toBe(2)
     expect(endState['todolistId2'].every(t => t.id != '2')).toBeTruthy()
-    //every каждый эл-нт массива соответствует предикату (условию)
+    // every verifies each array element matches the predicate (condition)
 })
 
 test('correct task should be added to correct array', () => {
@@ -146,15 +146,15 @@ test('new property with new array should be added when new todolist is added', (
 
 
     const keys = Object.keys(endState)
-    //возвращает массив ключей объекта
+    // returns array of object keys
     const newKey = keys.find(k => k != 'todolistId1' && k != 'todolistId2')
-    //проверяем есть ли ключи не равные этим значениям
+    // check if there are keys not equal to these values
     if (!newKey) {
         throw Error('new key should be added')
     }
-    //добавили новый ключ, теперь их должно быть 3
+    // added a new key, now there should be 3
     expect(keys.length).toBe(3)
-    //toEqual вместо toBe потому что пустые массивы не равны друг другу
+    // toEqual instead of toBe because empty arrays aren't equal to each other
     expect(endState[newKey]).toEqual([])
 })
 
@@ -179,9 +179,9 @@ test('empty arrays should be added when we set todolists', () => {
         ]
     }
     const action = fetchTodolistsTC.fulfilled(todolists, 'requestedId')
-    //должны создаться пустые массивы под таски
+    // empty arrays should be created for tasks
     const endState = tasksReducer({}, action)
-    //массив из ключей
+    // array of keys
     const keys = Object.keys(endState)
 
     expect(keys.length).toBe(2)
@@ -190,17 +190,17 @@ test('empty arrays should be added when we set todolists', () => {
 })
 
 test('tasks should be added for todolist', () => {
-    //передаю таски из ассоц. массива по ключу todolistId1 и айдишник тудулиста, которым является стринга todolistId1
+    // passing tasks from the associative array by key todolistId1 and the todolist ID represented by string todolistId1
     const action = fetchTasksTC.fulfilled({
         tasks: startState['todolistId2'],
         todolistId: 'todolistId2'
     }, 'requestId', 'todolistId2')
-    //изначальное состояние endState
+    // initial state of endState
     const endState = tasksReducer({
         'todolistId1': [],
         'todolistId2': []
     }, action)
-    //длина ассоц. массива
+    // length of associative array
     expect(endState['todolistId2'].length).toBe(3)
     expect(endState['todolistId1'].length).toBe(0)
 })

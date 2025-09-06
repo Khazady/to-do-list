@@ -2,7 +2,7 @@ import React from 'react';
 import {ReduxStoreProviderDecorator} from "../stories/decorators/ReduxStoreProviderDecorator";
 import App from "./App";
 
-//настройки
+// settings
 export default {
     title: 'App Stories',
     component: App,

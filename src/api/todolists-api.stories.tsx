@@ -14,8 +14,8 @@ export const GetTodolists = () => {
     const createTodolist = () => {
         todolistsAPI.createTodolist(title).then(data => setState(data))
     }
-    //если стейт не пустой, то сериализация
-    //если пустой, то создать новый ( state? потому что он изначально === null )
+    // if state isn't empty, serialize it
+    // if empty, create a new one (state? because it's initially === null)
     if (state?.length !== 0) {
         return <div> {JSON.stringify(state)}</div>
     } else {

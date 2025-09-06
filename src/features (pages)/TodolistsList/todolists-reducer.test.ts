@@ -17,7 +17,7 @@ let todolistId1: string
 let todolistId2: string
 let startState: Array<TodolistBusinessType>
 
-//перед каждым тестом задает стартовые значения
+// sets initial values before each test
 beforeEach(() => {
     todolistId1 = v1()
     todolistId2 = v1()

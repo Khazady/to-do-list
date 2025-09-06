@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {tasksAPI} from "./api";
-//доделать useState-ы и кнопки для всех(как в deleteTask) и кнопку в getTask которая будет createTask, если там пусто(последние 15 минут 13 урока)
+// finish useStates and buttons for all (like in deleteTask) and add a button in getTask that will createTask if empty (last 15 minutes of lesson 13)
 export default {
     title: 'Tasks-API',
 }
@@ -11,7 +11,7 @@ export const GetTasks = () => {
     const getTask = () => {
         tasksAPI.getTasks(todolistId).then(data => setState(data))
     }
-    //это сериализация с помощью JSON.stringify, тут будет отображаться response
+    // this is serialization with JSON.stringify; the response will be displayed here
     return (
         <>
             <input placeholder={"todolist id"} value={todolistId} onChange={e => setTodolistId(e.currentTarget.value)}/>
@@ -70,7 +70,7 @@ export const UpdateTaskTitle = () => {
         description: "string",
         status: 1,
         priority: 1,
-        //здесь нужно получать актуальную дату в этом формате
+        // need to get the current date in this format
         startDate: null,
         deadline: null
     }

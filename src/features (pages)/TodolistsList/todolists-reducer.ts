@@ -5,11 +5,11 @@ import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 //thunks
 export const fetchTodolistsTC = createAsyncThunk('todolists/fetchTodolists', async (arg, {dispatch, rejectWithValue}) => {
-    //крутилку ставим перед запросом на серв
+    // show spinner before sending request to server
     dispatch(setAppStatusAC({status: 'loading'}))
     const data = await todolistsAPI.getTodolists()
     try {
-        //тд подгрузились, крутилку убираем
+        // todolists loaded, remove spinner
         dispatch(setAppStatusAC({status: 'succeeded'}))
         return {todolists: data}
     } catch (error) {
@@ -106,7 +106,7 @@ const slice = createSlice({
             return state.filter(tl => tl.id !== action.payload.todolistId)
         })
         builder.addCase(addTodolistTC.fulfilled, (state, action) => {
-            //добавляем в серверный тудулист фильтр
+            // add filter to the todolist from server
             state.unshift({...action.payload.todolist, filter: 'all', entityStatus: 'idle'})
         })
         builder.addCase(changeTodolistTitleTC.fulfilled, (state, action) => {
@@ -123,7 +123,7 @@ export const {changeTodoListFilterAC, changeTodolistEntityStatusAC} = slice.acti
 
 // types
 export type FilterValuesType = 'all' | 'active' | 'completed';
-//дополняем тип, приходящий с сервера тем, что нужно UI
+// extend server type with UI-specific fields
 export type TodolistBusinessType = TodolistServerType & {
     filter: FilterValuesType
     entityStatus: RequestStatusType

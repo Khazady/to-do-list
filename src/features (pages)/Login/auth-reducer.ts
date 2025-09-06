@@ -17,7 +17,7 @@ export const loginTC = createAsyncThunk<undefined, LoginParamsType, {
             return
         } else {
             handleServerAppError(data, thunkAPI.dispatch)
-            //реджекнуть промис с ошибкой из сервера
+            // reject promise with error from server
             return thunkAPI.rejectWithValue({errors: data.messages, fieldsErrors: data.fieldsErrors})
         }
     } catch (err) {
@@ -32,12 +32,12 @@ export const logoutTC = createAsyncThunk('auth/logout', async (arg, thunkAPI) =>
     try {
         if (data.resultCode === 0) {
             thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}))
-            //логаут произошел, резолвим санку без данных, просто меняем в AC тру на фолс
+            // logout occurred; resolve thunk without data, just change true to false in AC
             //thunkAPI.dispatch(setIsLoggedInAC({isLoggedIn: false}))
             return
         } else {
             handleServerAppError(data, thunkAPI.dispatch)
-            //реджекаем, чтобы не попасть в fulfilled и не изменить isLoggedIn
+            // reject to avoid fulfilled and not change isLoggedIn
             return thunkAPI.rejectWithValue(null)
         }
     } catch (error) {
@@ -54,7 +54,7 @@ const slice = createSlice({
     },
     //small reducers for each action
     reducers: {
-        //приходит черновик state
+        // state draft is coming
         setIsLoggedInAC(state, action: PayloadAction<{ isLoggedIn: boolean }>) {
             state.isLoggedIn = action.payload.isLoggedIn
         }
@@ -73,3 +73,4 @@ const slice = createSlice({
 //exports from slice
 export const authReducer = slice.reducer
 export const setIsLoggedInAC = slice.actions.setIsLoggedInAC
+

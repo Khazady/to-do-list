@@ -7,7 +7,7 @@ import App from './app/App'
 import {HashRouter} from 'react-router-dom'
 
 ReactDOM.render(
-  //провайдер расшаривает стор для всех своих детей
+  // Provider shares the store with all of its children
 
   <Provider store={store}>
       <HashRouter>

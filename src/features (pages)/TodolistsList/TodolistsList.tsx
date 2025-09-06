@@ -16,20 +16,20 @@ export const TodolistsList: React.FC<PropsType> = React.memo(({demo=false}) => {
     const todolists = useSelector<RootStateType, Array<TodolistBusinessType>>(state => state.todolists)
     const isLoggedIn = useSelector<RootStateType, boolean>(state => state.auth.isLoggedIn)
 
-    //запоминает функцию и т.к. пустой [], то никогда не создавай новую функцию при перерисовке
-    //добавляем dispatch в [], просто чтобы реакт не ругался в консоли (disp не меняется и можно было бы его не добавлять)
+    // memoizes the function; with empty [], it never creates a new function on re-renders
+    // add dispatch to [] just to avoid React warnings in the console (dispatch doesn't change so it could be omitted)
     const addTodoList = useCallback((title: string) => dispatch(addTodolistTC(title)), [dispatch])
 
     useEffect(() => {
-        //убираем из storybook работу с сервером (после ретурна код не выполняется)
-        //а также не посылаем запрос на серв когда чел не залогинен
+        // remove server interaction from storybook (code after return doesn't execute)
+        // and don't send request to server when user isn't logged in
         if(demo || !isLoggedIn) return
-        //самая первая загрузка листов
+        // the very first loading of lists
         dispatch(fetchTodolistsTC())
     }, [dispatch])
 
-    //если не залогинен и находишься на странице тудулистов, то редирект на логин
-    //делаем в самом конце, чтобы хуки выше не попадали под else(хуки нельзя в условиях и циклах)
+    // if not logged in and on the todolists page, redirect to login
+    // place this at the end to keep hooks above out of else (hooks can't be inside conditions or loops)
     if(!isLoggedIn) {
         return <Redirect to={'/login'}/>
     }

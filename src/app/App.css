@@ -10,7 +10,7 @@
   opacity: 0.5;
 }
 
-/* чтобы не прыгало от крутилки приложение */
+/* prevent the app from jumping because of the spinner */
 .progress-bar {
   width: 100%;
   height: 10px;

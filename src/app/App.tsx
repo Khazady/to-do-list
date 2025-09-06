@@ -23,14 +23,14 @@ const App: React.FC<PropsType> = ({demo = false}) => {
     let isLoggedIn = useSelector<RootStateType, boolean>(state => state.auth.isLoggedIn)
 
 
-    //сработает только 1 раз, поменяет isLoggedIn на true и поэтому перерисуется с крутилки на приложение
+    // runs only once, sets isLoggedIn to true so it re-renders from spinner to the app
     useEffect(() => {
         if (!demo) {
             dispatch(initializeAppTC())
         }
     }, [])
     const logoutHandler = useCallback(() => dispatch(logoutTC()), [])
-    //если еще не инициализировалось(не успело отправить get me залогинен ли юзер), то показывать крутилку
+    // if not yet initialized (hasn't sent 'get me' to check user login), show spinner
     if (!isInitialized) {
         return <div
           style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
